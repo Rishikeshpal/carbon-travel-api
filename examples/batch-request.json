@@ -1,0 +1,252 @@
+{
+  "description": "Batch assessment for Q1 corporate travel audit - 5 trips",
+
+  "request": {
+    "batch_id": "batch_q1_2025_audit",
+    "itineraries": [
+      {
+        "trip_id": "emp_001_jan",
+        "traveler_count": 1,
+        "segments": [
+          {
+            "type": "flight",
+            "origin": "LHR",
+            "destination": "JFK",
+            "departure_date": "2025-01-15",
+            "cabin_class": "business",
+            "carrier_code": "BA"
+          },
+          {
+            "type": "hotel",
+            "location": { "city": "New York", "country_code": "US" },
+            "check_in": "2025-01-15",
+            "check_out": "2025-01-18",
+            "star_rating": 5
+          },
+          {
+            "type": "flight",
+            "origin": "JFK",
+            "destination": "LHR",
+            "departure_date": "2025-01-18",
+            "cabin_class": "business",
+            "carrier_code": "BA",
+            "is_return": true
+          }
+        ]
+      },
+      {
+        "trip_id": "emp_002_jan",
+        "traveler_count": 1,
+        "segments": [
+          {
+            "type": "flight",
+            "origin": "LHR",
+            "destination": "CDG",
+            "departure_date": "2025-01-20",
+            "cabin_class": "economy"
+          },
+          {
+            "type": "hotel",
+            "location": { "city": "Paris", "country_code": "FR" },
+            "check_in": "2025-01-20",
+            "check_out": "2025-01-21",
+            "star_rating": 4
+          },
+          {
+            "type": "flight",
+            "origin": "CDG",
+            "destination": "LHR",
+            "departure_date": "2025-01-21",
+            "cabin_class": "economy",
+            "is_return": true
+          }
+        ]
+      },
+      {
+        "trip_id": "emp_003_feb",
+        "traveler_count": 3,
+        "segments": [
+          {
+            "type": "flight",
+            "origin": "LHR",
+            "destination": "DXB",
+            "departure_date": "2025-02-10",
+            "cabin_class": "business"
+          },
+          {
+            "type": "hotel",
+            "location": { "city": "Dubai", "country_code": "AE" },
+            "check_in": "2025-02-10",
+            "check_out": "2025-02-14",
+            "star_rating": 5,
+            "room_count": 3
+          },
+          {
+            "type": "flight",
+            "origin": "DXB",
+            "destination": "LHR",
+            "departure_date": "2025-02-14",
+            "cabin_class": "business",
+            "is_return": true
+          }
+        ]
+      },
+      {
+        "trip_id": "emp_004_feb",
+        "traveler_count": 2,
+        "segments": [
+          {
+            "type": "flight",
+            "origin": "LHR",
+            "destination": "AMS",
+            "departure_date": "2025-02-25",
+            "cabin_class": "economy"
+          },
+          {
+            "type": "hotel",
+            "location": { "city": "Amsterdam", "country_code": "NL" },
+            "check_in": "2025-02-25",
+            "check_out": "2025-02-27",
+            "star_rating": 3,
+            "room_count": 2
+          },
+          {
+            "type": "flight",
+            "origin": "AMS",
+            "destination": "LHR",
+            "departure_date": "2025-02-27",
+            "cabin_class": "economy",
+            "is_return": true
+          }
+        ]
+      },
+      {
+        "trip_id": "emp_005_mar",
+        "traveler_count": 1,
+        "segments": [
+          {
+            "type": "flight",
+            "origin": "LHR",
+            "destination": "SIN",
+            "departure_date": "2025-03-05",
+            "cabin_class": "business"
+          },
+          {
+            "type": "hotel",
+            "location": { "city": "Singapore", "country_code": "SG" },
+            "check_in": "2025-03-05",
+            "check_out": "2025-03-10",
+            "star_rating": 5
+          },
+          {
+            "type": "flight",
+            "origin": "SIN",
+            "destination": "LHR",
+            "departure_date": "2025-03-10",
+            "cabin_class": "business",
+            "is_return": true
+          }
+        ]
+      }
+    ]
+  },
+
+  "response": {
+    "batch_id": "batch_q1_2025_audit",
+    "total_itineraries": 5,
+    "successful": 5,
+    "failed": 0,
+    "results": [
+      {
+        "trip_id": "emp_001_jan",
+        "status": "success",
+        "assessment": {
+          "total_emissions": {
+            "co2e_kg": 5847.2,
+            "breakdown": { "flights_kg": 5127.0, "hotels_kg": 720.2 }
+          },
+          "confidence_score": { "score": 0.85, "level": "high" }
+        }
+      },
+      {
+        "trip_id": "emp_002_jan",
+        "status": "success",
+        "assessment": {
+          "total_emissions": {
+            "co2e_kg": 266.3,
+            "breakdown": { "flights_kg": 245.2, "hotels_kg": 21.1 }
+          },
+          "confidence_score": { "score": 0.89, "level": "high" }
+        }
+      },
+      {
+        "trip_id": "emp_003_feb",
+        "status": "success",
+        "assessment": {
+          "total_emissions": {
+            "co2e_kg": 12453.6,
+            "breakdown": { "flights_kg": 10293.6, "hotels_kg": 2160.0 }
+          },
+          "confidence_score": { "score": 0.78, "level": "medium" }
+        }
+      },
+      {
+        "trip_id": "emp_004_feb",
+        "status": "success",
+        "assessment": {
+          "total_emissions": {
+            "co2e_kg": 542.8,
+            "breakdown": { "flights_kg": 378.4, "hotels_kg": 164.4 }
+          },
+          "confidence_score": { "score": 0.86, "level": "high" }
+        }
+      },
+      {
+        "trip_id": "emp_005_mar",
+        "status": "success",
+        "assessment": {
+          "total_emissions": {
+            "co2e_kg": 8234.5,
+            "breakdown": { "flights_kg": 7034.5, "hotels_kg": 1200.0 }
+          },
+          "confidence_score": { "score": 0.81, "level": "high" }
+        }
+      }
+    ],
+    "aggregate": {
+      "total_emissions_kg": 27344.4,
+      "average_per_trip_kg": 5468.9,
+      "total_travelers": 8,
+      "emissions_per_traveler_kg": 3418.1,
+      "breakdown_by_category": {
+        "flights_kg": 23078.7,
+        "flights_percent": 84.4,
+        "hotels_kg": 4265.7,
+        "hotels_percent": 15.6
+      },
+      "highest_impact_trip": {
+        "trip_id": "emp_003_feb",
+        "emissions_kg": 12453.6,
+        "percent_of_total": 45.5,
+        "recommendation": "Consider video conferencing for Dubai meetings or reduce team size"
+      },
+      "quick_wins": [
+        {
+          "trip_id": "emp_002_jan",
+          "current_emissions_kg": 266.3,
+          "potential_emissions_kg": 37.5,
+          "savings_kg": 228.8,
+          "action": "Replace Paris flight with Eurostar"
+        },
+        {
+          "trip_id": "emp_004_feb",
+          "current_emissions_kg": 542.8,
+          "potential_emissions_kg": 198.4,
+          "savings_kg": 344.4,
+          "action": "Replace Amsterdam flight with Eurostar via Brussels"
+        }
+      ]
+    },
+    "created_at": "2025-03-31T09:00:00Z"
+  }
+}

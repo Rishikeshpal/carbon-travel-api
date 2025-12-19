@@ -1,0 +1,1119 @@
+openapi: 3.0.3
+info:
+  title: Carbon Travel Intelligence API
+  description: |
+    **"Stripe for sustainability data in travel"**
+    
+    A Carbon- & Resource-Aware Travel Intelligence Platform providing real-time 
+    carbon impact calculations, lower-impact alternatives, and CSRD-aligned ESG outputs.
+    
+    ## Core Capabilities
+    - **Real Carbon Impact per Trip**: Flight emissions, ground transport, hotel energy intensity
+    - **"Better Alternative" Engine**: AI-powered suggestions for lower-emission itineraries  
+    - **Audit-Ready ESG Outputs**: CSRD-aligned exports with transparent calculations
+    
+    ## MVP Scope
+    - Flights + Hotels only
+    - EU-first regional grid carbon intensity data
+    - REST API with JSON responses
+    
+  version: 1.0.0
+  contact:
+    name: Carbon Travel API Support
+    email: api@carbontravelintel.io
+  license:
+    name: Proprietary
+    url: https://carbontravelintel.io/terms
+
+servers:
+  - url: https://api.carbontravelintel.io/v1
+    description: Production
+  - url: https://sandbox.carbontravelintel.io/v1
+    description: Sandbox (test data)
+
+tags:
+  - name: Carbon Assessment
+    description: Calculate carbon emissions for travel itineraries
+  - name: Alternatives
+    description: Find lower-impact travel alternatives
+  - name: ESG Reports
+    description: Generate audit-ready sustainability reports
+
+paths:
+  /assess:
+    post:
+      operationId: assessItinerary
+      summary: Calculate carbon emissions for a travel itinerary
+      description: |
+        Computes total carbon emissions for flights and hotels with confidence scoring.
+        Returns granular breakdown by segment and optional lower-impact alternatives.
+      tags:
+        - Carbon Assessment
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItineraryRequest'
+            examples:
+              london_to_paris:
+                summary: London to Paris business trip
+                value:
+                  trip_id: "trip_abc123"
+                  traveler_count: 1
+                  segments:
+                    - type: "flight"
+                      origin: "LHR"
+                      destination: "CDG"
+                      departure_date: "2025-03-15"
+                      cabin_class: "economy"
+                      carrier_code: "AF"
+                    - type: "hotel"
+                      location:
+                        city: "Paris"
+                        country_code: "FR"
+                      check_in: "2025-03-15"
+                      check_out: "2025-03-17"
+                      star_rating: 4
+                      room_count: 1
+                  options:
+                    include_alternatives: true
+                    alternative_count: 3
+      responses:
+        '200':
+          description: Successful carbon assessment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssessmentResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+  /assess/batch:
+    post:
+      operationId: assessBatchItineraries
+      summary: Batch assess multiple itineraries
+      description: |
+        Process up to 100 itineraries in a single request. 
+        Ideal for corporate travel audits and ESG reporting.
+      tags:
+        - Carbon Assessment
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchItineraryRequest'
+      responses:
+        '200':
+          description: Batch assessment results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchAssessmentResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /alternatives:
+    post:
+      operationId: findAlternatives
+      summary: Find lower-impact alternatives for an itinerary
+      description: |
+        Analyzes an itinerary and returns ranked alternatives that reduce emissions.
+        Considers: train vs flight, different hotels, optimal travel times.
+      tags:
+        - Alternatives
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlternativesRequest'
+      responses:
+        '200':
+          description: Alternative itineraries found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlternativesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /reports/esg:
+    post:
+      operationId: generateESGReport
+      summary: Generate CSRD-aligned ESG report
+      description: |
+        Creates an audit-ready sustainability report for a date range.
+        Includes transparent calculation methods and optional blockchain attestation.
+      tags:
+        - ESG Reports
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ESGReportRequest'
+      responses:
+        '200':
+          description: ESG report generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ESGReportResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /factors/flights:
+    get:
+      operationId: getFlightEmissionFactors
+      summary: Get flight emission factors
+      description: |
+        Returns current emission factors used for flight calculations.
+        Based on ICAO Carbon Emissions Calculator methodology.
+      tags:
+        - Carbon Assessment
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: cabin_class
+          in: query
+          schema:
+            type: string
+            enum: [economy, premium_economy, business, first]
+      responses:
+        '200':
+          description: Flight emission factors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlightFactorsResponse'
+
+  /factors/hotels:
+    get:
+      operationId: getHotelEmissionFactors
+      summary: Get hotel emission factors by region
+      description: |
+        Returns regional hotel emission factors including grid carbon intensity.
+        EU regions have granular data; other regions use IPCC defaults.
+      tags:
+        - Carbon Assessment
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: country_code
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 2
+            maxLength: 2
+          example: "FR"
+      responses:
+        '200':
+          description: Hotel emission factors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HotelFactorsResponse'
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication
+
+  schemas:
+    # ============================================
+    # REQUEST SCHEMAS
+    # ============================================
+    
+    ItineraryRequest:
+      type: object
+      required:
+        - segments
+      properties:
+        trip_id:
+          type: string
+          description: Client-provided unique identifier for this trip
+          example: "trip_abc123"
+        traveler_count:
+          type: integer
+          minimum: 1
+          maximum: 500
+          default: 1
+          description: Number of travelers (emissions multiplied accordingly)
+        segments:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items:
+            $ref: '#/components/schemas/TravelSegment'
+        options:
+          $ref: '#/components/schemas/AssessmentOptions'
+
+    TravelSegment:
+      type: object
+      discriminator:
+        propertyName: type
+        mapping:
+          flight: '#/components/schemas/FlightSegment'
+          hotel: '#/components/schemas/HotelSegment'
+      oneOf:
+        - $ref: '#/components/schemas/FlightSegment'
+        - $ref: '#/components/schemas/HotelSegment'
+
+    FlightSegment:
+      type: object
+      required:
+        - type
+        - origin
+        - destination
+        - departure_date
+      properties:
+        type:
+          type: string
+          enum: [flight]
+        origin:
+          type: string
+          minLength: 3
+          maxLength: 3
+          description: IATA airport code
+          example: "LHR"
+        destination:
+          type: string
+          minLength: 3
+          maxLength: 3
+          description: IATA airport code
+          example: "CDG"
+        departure_date:
+          type: string
+          format: date
+          example: "2025-03-15"
+        departure_time:
+          type: string
+          format: time
+          description: Optional - used for grid-aware calculations
+          example: "09:30"
+        cabin_class:
+          type: string
+          enum: [economy, premium_economy, business, first]
+          default: economy
+        carrier_code:
+          type: string
+          minLength: 2
+          maxLength: 2
+          description: IATA airline code (used for fleet efficiency data)
+          example: "AF"
+        flight_number:
+          type: string
+          description: Optional - enables specific aircraft lookup
+          example: "AF1680"
+        is_return:
+          type: boolean
+          default: false
+          description: Flag if this is a return leg (for round-trip pricing)
+
+    HotelSegment:
+      type: object
+      required:
+        - type
+        - location
+        - check_in
+        - check_out
+      properties:
+        type:
+          type: string
+          enum: [hotel]
+        location:
+          $ref: '#/components/schemas/Location'
+        check_in:
+          type: string
+          format: date
+          example: "2025-03-15"
+        check_out:
+          type: string
+          format: date
+          example: "2025-03-17"
+        star_rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          description: Hotel star rating (affects energy intensity estimate)
+        hotel_chain:
+          type: string
+          description: Hotel chain code for chain-specific sustainability data
+          example: "MARRIOTT"
+        room_count:
+          type: integer
+          minimum: 1
+          default: 1
+        sustainability_certified:
+          type: boolean
+          description: Whether hotel has recognized sustainability certification
+          default: false
+
+    Location:
+      type: object
+      required:
+        - country_code
+      properties:
+        city:
+          type: string
+          example: "Paris"
+        country_code:
+          type: string
+          minLength: 2
+          maxLength: 2
+          description: ISO 3166-1 alpha-2 country code
+          example: "FR"
+        coordinates:
+          type: object
+          properties:
+            latitude:
+              type: number
+              format: double
+              minimum: -90
+              maximum: 90
+            longitude:
+              type: number
+              format: double
+              minimum: -180
+              maximum: 180
+
+    AssessmentOptions:
+      type: object
+      properties:
+        include_alternatives:
+          type: boolean
+          default: false
+          description: Whether to include lower-impact alternatives in response
+        alternative_count:
+          type: integer
+          minimum: 1
+          maximum: 10
+          default: 3
+          description: Number of alternatives to return
+        calculation_method:
+          type: string
+          enum: [standard, detailed, conservative]
+          default: standard
+          description: |
+            - standard: ICAO + DEFRA defaults
+            - detailed: Uses airline/hotel specific data where available
+            - conservative: Upper-bound estimates for cautious reporting
+        include_methodology:
+          type: boolean
+          default: false
+          description: Include detailed methodology notes in response
+
+    BatchItineraryRequest:
+      type: object
+      required:
+        - itineraries
+      properties:
+        itineraries:
+          type: array
+          minItems: 1
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/ItineraryRequest'
+        batch_id:
+          type: string
+          description: Client-provided batch identifier
+
+    AlternativesRequest:
+      type: object
+      required:
+        - segments
+      properties:
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/TravelSegment'
+        constraints:
+          $ref: '#/components/schemas/AlternativeConstraints'
+        ranking_preference:
+          type: string
+          enum: [emissions, cost, time, balanced]
+          default: emissions
+
+    AlternativeConstraints:
+      type: object
+      properties:
+        max_journey_time_hours:
+          type: number
+          description: Maximum acceptable journey time
+        max_cost_increase_percent:
+          type: number
+          minimum: 0
+          maximum: 200
+          description: Maximum acceptable cost increase as percentage
+        allow_mode_change:
+          type: boolean
+          default: true
+          description: Allow switching transport mode (e.g., flight to train)
+        arrival_flexibility_hours:
+          type: integer
+          minimum: 0
+          maximum: 24
+          default: 2
+          description: Hours of flexibility around arrival time
+
+    ESGReportRequest:
+      type: object
+      required:
+        - organization_id
+        - period
+      properties:
+        organization_id:
+          type: string
+          description: Your organization identifier
+        period:
+          type: object
+          required:
+            - start_date
+            - end_date
+          properties:
+            start_date:
+              type: string
+              format: date
+            end_date:
+              type: string
+              format: date
+        report_format:
+          type: string
+          enum: [json, pdf, csrd_xml]
+          default: json
+        include_blockchain_attestation:
+          type: boolean
+          default: false
+          description: Generate immutable hash of report on blockchain
+
+    # ============================================
+    # RESPONSE SCHEMAS
+    # ============================================
+
+    AssessmentResponse:
+      type: object
+      required:
+        - assessment_id
+        - total_emissions
+        - confidence_score
+        - segments
+        - created_at
+      properties:
+        assessment_id:
+          type: string
+          format: uuid
+          description: Unique identifier for this assessment
+          example: "assess_7f8e9d0c-1a2b-3c4d-5e6f-7a8b9c0d1e2f"
+        trip_id:
+          type: string
+          description: Client-provided trip ID (echoed back)
+        total_emissions:
+          $ref: '#/components/schemas/EmissionsTotal'
+        confidence_score:
+          $ref: '#/components/schemas/ConfidenceScore'
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/SegmentEmissions'
+        lower_impact_alternatives:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alternative'
+          description: Only included if options.include_alternatives was true
+        methodology:
+          $ref: '#/components/schemas/Methodology'
+        created_at:
+          type: string
+          format: date-time
+        expires_at:
+          type: string
+          format: date-time
+          description: When this assessment data expires (factors may update)
+
+    EmissionsTotal:
+      type: object
+      required:
+        - co2e_kg
+        - unit
+      properties:
+        co2e_kg:
+          type: number
+          format: double
+          description: Total CO₂ equivalent emissions in kilograms
+          example: 287.4
+        unit:
+          type: string
+          enum: [kg_co2e]
+          default: kg_co2e
+        breakdown:
+          type: object
+          properties:
+            flights_kg:
+              type: number
+              format: double
+              example: 245.2
+            hotels_kg:
+              type: number
+              format: double
+              example: 42.2
+            ground_transport_kg:
+              type: number
+              format: double
+              description: Reserved for future use
+        per_traveler_kg:
+          type: number
+          format: double
+          description: Emissions per traveler (total / traveler_count)
+          example: 287.4
+        equivalent:
+          $ref: '#/components/schemas/EmissionsEquivalent'
+
+    EmissionsEquivalent:
+      type: object
+      description: Human-readable equivalents for communication
+      properties:
+        trees_to_offset:
+          type: number
+          format: double
+          description: Number of trees needed to absorb emissions over 1 year
+          example: 13.2
+        driving_km:
+          type: number
+          format: double
+          description: Equivalent km driven in average ICE car
+          example: 1842
+        streaming_hours:
+          type: number
+          format: double
+          description: Equivalent hours of video streaming
+          example: 4790
+
+    ConfidenceScore:
+      type: object
+      required:
+        - score
+        - level
+      properties:
+        score:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 1
+          description: Confidence in the accuracy of the assessment (0-1)
+          example: 0.87
+        level:
+          type: string
+          enum: [high, medium, low]
+          description: Categorical confidence level
+          example: "high"
+        factors:
+          type: array
+          items:
+            type: object
+            properties:
+              factor:
+                type: string
+                example: "airline_specific_data"
+              impact:
+                type: string
+                enum: [positive, negative, neutral]
+              description:
+                type: string
+                example: "Carrier-specific fuel efficiency data available"
+
+    SegmentEmissions:
+      type: object
+      required:
+        - segment_index
+        - type
+        - emissions_kg
+      properties:
+        segment_index:
+          type: integer
+          description: Index of segment in original request (0-based)
+        type:
+          type: string
+          enum: [flight, hotel]
+        emissions_kg:
+          type: number
+          format: double
+          example: 122.6
+        details:
+          oneOf:
+            - $ref: '#/components/schemas/FlightEmissionDetails'
+            - $ref: '#/components/schemas/HotelEmissionDetails'
+
+    FlightEmissionDetails:
+      type: object
+      properties:
+        distance_km:
+          type: number
+          format: double
+          example: 344
+        haul_type:
+          type: string
+          enum: [short, medium, long]
+          description: "short: <1500km, medium: 1500-4000km, long: >4000km"
+          example: "short"
+        radiative_forcing_multiplier:
+          type: number
+          format: double
+          description: Multiplier for high-altitude emissions effects
+          example: 1.9
+        fuel_burn_kg:
+          type: number
+          format: double
+          example: 38.5
+        aircraft_type:
+          type: string
+          description: Aircraft type if known
+          example: "A320neo"
+        load_factor:
+          type: number
+          format: double
+          description: Assumed passenger load factor
+          example: 0.82
+        emission_factor_source:
+          type: string
+          example: "ICAO Carbon Calculator 2024"
+
+    HotelEmissionDetails:
+      type: object
+      properties:
+        nights:
+          type: integer
+          example: 2
+        emissions_per_night_kg:
+          type: number
+          format: double
+          example: 21.1
+        grid_carbon_intensity:
+          type: object
+          properties:
+            value:
+              type: number
+              format: double
+              description: gCO₂/kWh
+              example: 56.2
+            source:
+              type: string
+              example: "ENTSO-E 2024 average"
+            country:
+              type: string
+              example: "FR"
+        energy_consumption_kwh:
+          type: number
+          format: double
+          description: Estimated energy consumption for stay
+          example: 75.4
+        emission_factor_source:
+          type: string
+          example: "Cornell Hotel Sustainability Benchmarking Index"
+
+    Alternative:
+      type: object
+      required:
+        - alternative_id
+        - total_emissions
+        - savings
+        - segments
+      properties:
+        alternative_id:
+          type: string
+          example: "alt_001"
+        total_emissions:
+          $ref: '#/components/schemas/EmissionsTotal'
+        savings:
+          $ref: '#/components/schemas/EmissionsSavings'
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlternativeSegment'
+        tradeoffs:
+          type: object
+          properties:
+            time_difference_minutes:
+              type: integer
+              description: Positive = longer, negative = shorter
+              example: 95
+            estimated_cost_difference_eur:
+              type: number
+              format: double
+              description: Positive = more expensive
+              example: -45.00
+            comfort_score:
+              type: number
+              format: double
+              minimum: 0
+              maximum: 5
+              description: Relative comfort rating
+              example: 4.2
+        recommendation_reason:
+          type: string
+          example: "Eurostar train emits 28% less CO₂ than flight, with only 35min additional journey time"
+
+    EmissionsSavings:
+      type: object
+      required:
+        - absolute_kg
+        - percentage
+      properties:
+        absolute_kg:
+          type: number
+          format: double
+          description: CO₂e saved in kg
+          example: 80.5
+        percentage:
+          type: number
+          format: double
+          description: Percentage reduction vs original
+          example: 28.0
+        label:
+          type: string
+          description: Human-readable savings description
+          example: "Saves 80.5 kg CO₂e (28% reduction)"
+
+    AlternativeSegment:
+      type: object
+      required:
+        - type
+        - original_segment_index
+      properties:
+        type:
+          type: string
+          enum: [flight, train, hotel, bus]
+        original_segment_index:
+          type: integer
+          description: Which original segment this replaces (-1 if new)
+        description:
+          type: string
+          example: "Eurostar London St Pancras → Paris Gare du Nord"
+        emissions_kg:
+          type: number
+          format: double
+          example: 8.2
+        details:
+          type: object
+          additionalProperties: true
+
+    Methodology:
+      type: object
+      properties:
+        standards:
+          type: array
+          items:
+            type: string
+          example: ["ICAO Carbon Calculator", "GHG Protocol", "DEFRA 2024"]
+        calculation_date:
+          type: string
+          format: date
+        emission_factors_version:
+          type: string
+          example: "2024.1"
+        notes:
+          type: array
+          items:
+            type: string
+
+    BatchAssessmentResponse:
+      type: object
+      properties:
+        batch_id:
+          type: string
+        total_itineraries:
+          type: integer
+        successful:
+          type: integer
+        failed:
+          type: integer
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              trip_id:
+                type: string
+              status:
+                type: string
+                enum: [success, error]
+              assessment:
+                $ref: '#/components/schemas/AssessmentResponse'
+              error:
+                $ref: '#/components/schemas/Error'
+        aggregate:
+          type: object
+          properties:
+            total_emissions_kg:
+              type: number
+              format: double
+            average_per_trip_kg:
+              type: number
+              format: double
+            total_traveler_emissions_kg:
+              type: number
+              format: double
+
+    AlternativesResponse:
+      type: object
+      required:
+        - original_emissions
+        - alternatives
+      properties:
+        original_emissions:
+          $ref: '#/components/schemas/EmissionsTotal'
+        alternatives:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alternative'
+        best_alternative_summary:
+          type: string
+          example: "Taking Eurostar instead of flying saves 80.5 kg CO₂e (28% reduction)"
+
+    ESGReportResponse:
+      type: object
+      properties:
+        report_id:
+          type: string
+          format: uuid
+        organization_id:
+          type: string
+        period:
+          type: object
+          properties:
+            start_date:
+              type: string
+              format: date
+            end_date:
+              type: string
+              format: date
+        summary:
+          type: object
+          properties:
+            total_trips:
+              type: integer
+            total_travelers:
+              type: integer
+            total_emissions_kg:
+              type: number
+              format: double
+            total_emissions_tonnes:
+              type: number
+              format: double
+            emissions_per_trip_kg:
+              type: number
+              format: double
+            emissions_by_category:
+              type: object
+              properties:
+                flights_kg:
+                  type: number
+                hotels_kg:
+                  type: number
+            year_over_year_change_percent:
+              type: number
+              format: double
+        csrd_compliance:
+          type: object
+          properties:
+            compliant:
+              type: boolean
+            standards_met:
+              type: array
+              items:
+                type: string
+            data_quality_score:
+              type: number
+              format: double
+        blockchain_attestation:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+            chain:
+              type: string
+              example: "VeChain"
+            transaction_hash:
+              type: string
+            timestamp:
+              type: string
+              format: date-time
+            verification_url:
+              type: string
+              format: uri
+        download_urls:
+          type: object
+          properties:
+            json:
+              type: string
+              format: uri
+            pdf:
+              type: string
+              format: uri
+            csrd_xml:
+              type: string
+              format: uri
+
+    FlightFactorsResponse:
+      type: object
+      properties:
+        factors:
+          type: array
+          items:
+            type: object
+            properties:
+              cabin_class:
+                type: string
+              haul_type:
+                type: string
+              kg_co2e_per_km:
+                type: number
+                format: double
+              radiative_forcing_multiplier:
+                type: number
+                format: double
+        source:
+          type: string
+        updated_at:
+          type: string
+          format: date
+
+    HotelFactorsResponse:
+      type: object
+      properties:
+        country_code:
+          type: string
+        country_name:
+          type: string
+        grid_carbon_intensity:
+          type: object
+          properties:
+            value_g_co2_per_kwh:
+              type: number
+              format: double
+            source:
+              type: string
+            year:
+              type: integer
+        hotel_emission_factors:
+          type: array
+          items:
+            type: object
+            properties:
+              star_rating:
+                type: integer
+              kg_co2e_per_night:
+                type: number
+                format: double
+              kwh_per_night:
+                type: number
+                format: double
+        data_quality:
+          type: string
+          enum: [measured, estimated, default]
+          description: |
+            - measured: Country-specific real data
+            - estimated: Regional estimates
+            - default: IPCC global defaults
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: "INVALID_AIRPORT_CODE"
+        message:
+          type: string
+          example: "Airport code 'XYZ' not found in IATA database"
+        field:
+          type: string
+          example: "segments[0].origin"
+        details:
+          type: object
+          additionalProperties: true
+
+  responses:
+    BadRequest:
+      description: Invalid request format or parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: "VALIDATION_ERROR"
+            message: "Invalid request body"
+            details:
+              errors:
+                - field: "segments[0].departure_date"
+                  message: "Date must be in the future"
+
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: "UNAUTHORIZED"
+            message: "Invalid or missing API key"
+
+    UnprocessableEntity:
+      description: Valid request but unable to process
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: "ROUTE_NOT_FOUND"
+            message: "No route found between LHR and XYZ"
+
+    RateLimited:
+      description: Rate limit exceeded
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+          description: Requests per minute allowed
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+          description: Requests remaining in current window
+        X-RateLimit-Reset:
+          schema:
+            type: integer
+          description: Unix timestamp when limit resets
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: "RATE_LIMITED"
+            message: "Rate limit exceeded. Try again in 45 seconds."

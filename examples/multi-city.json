@@ -1,0 +1,209 @@
+{
+  "description": "Multi-city European business trip - London → Frankfurt → Milan → London",
+
+  "request": {
+    "trip_id": "trip_europe_tour_001",
+    "traveler_count": 2,
+    "segments": [
+      {
+        "type": "flight",
+        "origin": "LHR",
+        "destination": "FRA",
+        "departure_date": "2025-04-07",
+        "cabin_class": "business",
+        "carrier_code": "LH"
+      },
+      {
+        "type": "hotel",
+        "location": {
+          "city": "Frankfurt",
+          "country_code": "DE"
+        },
+        "check_in": "2025-04-07",
+        "check_out": "2025-04-09",
+        "star_rating": 4,
+        "room_count": 2
+      },
+      {
+        "type": "flight",
+        "origin": "FRA",
+        "destination": "MXP",
+        "departure_date": "2025-04-09",
+        "cabin_class": "business",
+        "carrier_code": "LH"
+      },
+      {
+        "type": "hotel",
+        "location": {
+          "city": "Milan",
+          "country_code": "IT"
+        },
+        "check_in": "2025-04-09",
+        "check_out": "2025-04-11",
+        "star_rating": 5,
+        "room_count": 2
+      },
+      {
+        "type": "flight",
+        "origin": "MXP",
+        "destination": "LHR",
+        "departure_date": "2025-04-11",
+        "cabin_class": "business",
+        "carrier_code": "BA"
+      }
+    ],
+    "options": {
+      "include_alternatives": true,
+      "alternative_count": 2,
+      "calculation_method": "detailed"
+    }
+  },
+
+  "response": {
+    "assessment_id": "assess_b2c3d4e5-f6a7-8901-bcde-f23456789012",
+    "trip_id": "trip_europe_tour_001",
+    "total_emissions": {
+      "co2e_kg": 2847.6,
+      "unit": "kg_co2e",
+      "breakdown": {
+        "flights_kg": 2183.4,
+        "hotels_kg": 664.2
+      },
+      "per_traveler_kg": 1423.8,
+      "equivalent": {
+        "trees_to_offset": 130.5,
+        "driving_km": 18256,
+        "streaming_hours": 47460
+      }
+    },
+    "confidence_score": {
+      "score": 0.82,
+      "level": "high",
+      "factors": [
+        {
+          "factor": "airline_specific_data",
+          "impact": "positive",
+          "description": "Lufthansa and BA fleet data available"
+        },
+        {
+          "factor": "business_class_allocation",
+          "impact": "neutral",
+          "description": "Business class uses 3x floor space multiplier"
+        },
+        {
+          "factor": "mixed_grid_regions",
+          "impact": "neutral",
+          "description": "Germany (high) and Italy (medium) grid intensities"
+        }
+      ]
+    },
+    "segments": [
+      {
+        "segment_index": 0,
+        "type": "flight",
+        "emissions_kg": 549.0,
+        "details": {
+          "distance_km": 654,
+          "haul_type": "short",
+          "radiative_forcing_multiplier": 1.9,
+          "aircraft_type": "A320",
+          "load_factor": 0.78,
+          "cabin_class_multiplier": 3.0,
+          "emission_factor_source": "ICAO Carbon Calculator 2024"
+        }
+      },
+      {
+        "segment_index": 1,
+        "type": "hotel",
+        "emissions_kg": 322.1,
+        "details": {
+          "nights": 2,
+          "rooms": 2,
+          "emissions_per_room_night_kg": 80.5,
+          "grid_carbon_intensity": {
+            "value": 366,
+            "source": "ENTSO-E 2024 average",
+            "country": "DE"
+          },
+          "energy_consumption_kwh": 220,
+          "emission_factor_source": "Cornell Hotel Sustainability Benchmarking Index"
+        }
+      },
+      {
+        "segment_index": 2,
+        "type": "flight",
+        "emissions_kg": 423.6,
+        "details": {
+          "distance_km": 504,
+          "haul_type": "short",
+          "radiative_forcing_multiplier": 1.9,
+          "aircraft_type": "A319",
+          "load_factor": 0.81,
+          "cabin_class_multiplier": 3.0,
+          "emission_factor_source": "ICAO Carbon Calculator 2024"
+        }
+      },
+      {
+        "segment_index": 3,
+        "type": "hotel",
+        "emissions_kg": 342.1,
+        "details": {
+          "nights": 2,
+          "rooms": 2,
+          "emissions_per_room_night_kg": 85.5,
+          "grid_carbon_intensity": {
+            "value": 267,
+            "source": "ENTSO-E 2024 average",
+            "country": "IT"
+          },
+          "energy_consumption_kwh": 320,
+          "emission_factor_source": "Cornell Hotel Sustainability Benchmarking Index"
+        }
+      },
+      {
+        "segment_index": 4,
+        "type": "flight",
+        "emissions_kg": 1210.8,
+        "details": {
+          "distance_km": 958,
+          "haul_type": "short",
+          "radiative_forcing_multiplier": 1.9,
+          "aircraft_type": "A321",
+          "load_factor": 0.79,
+          "cabin_class_multiplier": 3.0,
+          "emission_factor_source": "ICAO Carbon Calculator 2024"
+        }
+      }
+    ],
+    "lower_impact_alternatives": [
+      {
+        "alternative_id": "alt_001",
+        "total_emissions": {
+          "co2e_kg": 1892.4,
+          "unit": "kg_co2e"
+        },
+        "savings": {
+          "absolute_kg": 955.2,
+          "percentage": 33.5,
+          "label": "Saves 955.2 kg CO₂e (34% reduction)"
+        },
+        "recommendation_reason": "Replace FRA→MXP flight with ICE train (5h 20m). Downgrade to eco-certified hotels. Keeps first/last flights for time efficiency."
+      },
+      {
+        "alternative_id": "alt_002",
+        "total_emissions": {
+          "co2e_kg": 2295.6,
+          "unit": "kg_co2e"
+        },
+        "savings": {
+          "absolute_kg": 552.0,
+          "percentage": 19.4,
+          "label": "Saves 552.0 kg CO₂e (19% reduction)"
+        },
+        "recommendation_reason": "Switch to premium economy class on all flights. Select eco-certified hotels. Minimal schedule impact."
+      }
+    ],
+    "created_at": "2025-01-15T11:45:00Z",
+    "expires_at": "2025-04-15T11:45:00Z"
+  }
+}

@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Travel Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #059669;
+            --primary-dark: #047857;
+            --primary-light: #d1fae5;
+            --secondary: #0ea5e9;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-500: #6b7280;
+            --gray-700: #374151;
+            --gray-900: #111827;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 100%);
+            min-height: 100vh;
+            color: var(--gray-900);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, #0d9488 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+
+        .header h1 { font-size: 1.75rem; font-weight: 700; }
+        .header p { opacity: 0.9; font-size: 1rem; margin-top: 0.25rem; }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--gray-100);
+        }
+
+        .section-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .section-header .emoji { font-size: 1.25rem; }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--gray-500);
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.625rem 0.75rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
+        }
+
+        .airport-input {
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-align: center;
+            letter-spacing: 0.1em;
+        }
+
+        .route-row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 0.5rem;
+            align-items: end;
+            margin-bottom: 1rem;
+        }
+
+        .arrow { 
+            font-size: 1.5rem; 
+            color: var(--gray-400);
+            padding-bottom: 0.5rem;
+        }
+
+        .toggle-section {
+            background: var(--gray-50);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .toggle-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .toggle-header h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            background: var(--gray-300);
+            border-radius: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .toggle-switch.active { background: var(--primary); }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .toggle-switch.active::after { transform: translateX(22px); }
+
+        .toggle-content {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .toggle-content.show { display: block; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #0d9488 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
+        }
+
+        .quick-routes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .quick-route {
+            padding: 0.5rem 0.75rem;
+            background: white;
+            border: 2px solid var(--gray-200);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .quick-route:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        /* Results */
+        .results-container { display: none; }
+        .results-container.show { display: block; animation: fadeIn 0.3s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-hero {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary-light) 0%, #cffafe 100%);
+            border-radius: 16px;
+            margin-bottom: 1rem;
+        }
+
+        .result-hero .big-number {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            line-height: 1;
+        }
+
+        .result-hero .unit { font-size: 1.25rem; color: var(--gray-500); }
+        .result-hero .label { font-size: 0.9rem; color: var(--gray-600); margin-top: 0.5rem; }
+
+        .equivalents {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .equivalent-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .equivalent-card .emoji { font-size: 1.5rem; margin-bottom: 0.25rem; }
+        .equivalent-card .value { font-size: 1.25rem; font-weight: 700; color: var(--gray-900); }
+        .equivalent-card .label { font-size: 0.65rem; color: var(--gray-500); text-transform: uppercase; }
+
+        .breakdown {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--gray-100);
+            font-size: 0.9rem;
+        }
+
+        .breakdown-item:last-child { border-bottom: none; font-weight: 600; }
+
+        .alternative-card {
+            border: 2px solid var(--primary-light);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            background: white;
+        }
+
+        .alternative-card.best {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 100%);
+        }
+
+        .alternative-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .alternative-title { font-weight: 600; font-size: 0.95rem; }
+
+        .savings-badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .alternative-reason {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+            padding: 0.75rem;
+            background: var(--gray-50);
+            border-radius: 8px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .loading.show { display: block; }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--gray-200);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .footer-note {
+            text-align: center;
+            padding: 1rem;
+            color: var(--gray-500);
+            font-size: 0.75rem;
+        }
+
+        .footer-note a { color: var(--primary); text-decoration: none; }
+
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr 1fr; }
+            .equivalents { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌱 Carbon Travel Calculator</h1>
+        <p>Calculate your complete trip carbon footprint</p>
+    </div>
+
+    <div class="container">
+        <!-- Calculator Form -->
+        <div id="calculatorForm">
+            <!-- Quick Routes -->
+            <div class="quick-routes">
+                <button class="quick-route" onclick="setRoute('DUB', 'SIN')">🇮🇪→🇸🇬 Dublin-Singapore</button>
+                <button class="quick-route" onclick="setRoute('LHR', 'CDG')">🇬🇧→🇫🇷 London-Paris</button>
+                <button class="quick-route" onclick="setRoute('LHR', 'JFK')">🇬🇧→🇺🇸 London-NYC</button>
+                <button class="quick-route" onclick="setRoute('FRA', 'SIN')">🇩🇪→🇸🇬 Frankfurt-Singapore</button>
+            </div>
+
+            <!-- Flight Section -->
+            <div class="card">
+                <div class="section-header">
+                    <span class="emoji">✈️</span>
+                    <h3>Flight Details</h3>
+                </div>
+
+                <div class="route-row">
+                    <div class="form-group">
+                        <label>From</label>
+                        <input type="text" id="origin" class="airport-input" placeholder="LHR" maxlength="3">
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="form-group">
+                        <label>To</label>
+                        <input type="text" id="destination" class="airport-input" placeholder="CDG" maxlength="3">
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Trip Type</label>
+                        <select id="tripType">
+                            <option value="oneway">One Way</option>
+                            <option value="return" selected>Return</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Class</label>
+                        <select id="cabinClass">
+                            <option value="economy" selected>Economy</option>
+                            <option value="premium_economy">Premium Economy</option>
+                            <option value="business">Business</option>
+                            <option value="first">First Class</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Passengers</label>
+                        <select id="passengers">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hotel Section -->
+            <div class="toggle-section">
+                <div class="toggle-header" onclick="toggleSection('hotel')">
+                    <h4><span>🏨</span> Hotel Stay</h4>
+                    <div class="toggle-switch" id="hotelToggle"></div>
+                </div>
+                <div class="toggle-content" id="hotelContent">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" id="hotelCity" placeholder="Paris">
+                        </div>
+                        <div class="form-group">
+                            <label>Country</label>
+                            <select id="hotelCountry">
+                                <option value="FR">France 🇫🇷</option>
+                                <option value="GB">UK 🇬🇧</option>
+                                <option value="DE">Germany 🇩🇪</option>
+                                <option value="US">USA 🇺🇸</option>
+                                <option value="SG">Singapore 🇸🇬</option>
+                                <option value="AE">UAE 🇦🇪</option>
+                                <option value="JP">Japan 🇯🇵</option>
+                                <option value="IT">Italy 🇮🇹</option>
+                                <option value="ES">Spain 🇪🇸</option>
+                                <option value="IE">Ireland 🇮🇪</option>
+                                <option value="NL">Netherlands 🇳🇱</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Nights</label>
+                            <select id="hotelNights">
+                                <option value="1">1</option>
+                                <option value="2" selected>2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="7">7</option>
+                                <option value="10">10</option>
+                                <option value="14">14</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Rooms</label>
+                            <select id="hotelRooms">
+                                <option value="1" selected>1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Star Rating</label>
+                            <select id="hotelStars">
+                                <option value="2">⭐⭐ 2 Star</option>
+                                <option value="3">⭐⭐⭐ 3 Star</option>
+                                <option value="4" selected>⭐⭐⭐⭐ 4 Star</option>
+                                <option value="5">⭐⭐⭐⭐⭐ 5 Star</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Breakfast</label>
+                            <select id="hotelBreakfast">
+                                <option value="none">Not included</option>
+                                <option value="continental">Continental</option>
+                                <option value="buffet" selected>Buffet</option>
+                                <option value="full_english">Full English</option>
+                                <option value="vegan">Vegan</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Airport Transfer Section -->
+            <div class="toggle-section">
+                <div class="toggle-header" onclick="toggleSection('transfer')">
+                    <h4><span>🚕</span> Airport Transfer</h4>
+                    <div class="toggle-switch" id="transferToggle"></div>
+                </div>
+                <div class="toggle-content" id="transferContent">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Transfer Type</label>
+                            <select id="transferType">
+                                <option value="taxi">Regular Taxi</option>
+                                <option value="uber_x" selected>Uber / Bolt</option>
+                                <option value="uber_black">Premium Sedan</option>
+                                <option value="electric_uber">Electric (Tesla)</option>
+                                <option value="bus">Airport Bus</option>
+                                <option value="metro">Metro / Train</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Direction</label>
+                            <select id="transferDirection">
+                                <option value="both" selected>Both ways (round trip)</option>
+                                <option value="arrival">Arrival only</option>
+                                <option value="departure">Departure only</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- City Transport Section -->
+            <div class="toggle-section">
+                <div class="toggle-header" onclick="toggleSection('cityTransport')">
+                    <h4><span>🚗</span> City Transport (Uber/Taxi during stay)</h4>
+                    <div class="toggle-switch" id="cityTransportToggle"></div>
+                </div>
+                <div class="toggle-content" id="cityTransportContent">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Vehicle Type</label>
+                            <select id="cityVehicleType">
+                                <option value="uber_x" selected>Uber / Bolt</option>
+                                <option value="taxi">Local Taxi</option>
+                                <option value="electric_uber">Electric Uber</option>
+                                <option value="bus">Local Bus</option>
+                                <option value="metro">Metro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Estimated Total KM</label>
+                            <select id="cityKm">
+                                <option value="10">~10 km (minimal)</option>
+                                <option value="25">~25 km (light use)</option>
+                                <option value="50" selected>~50 km (moderate)</option>
+                                <option value="100">~100 km (frequent)</option>
+                                <option value="150">~150 km (heavy use)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calculate Button -->
+            <button class="btn btn-primary" onclick="calculate()">
+                🌍 Calculate Total Carbon Footprint
+            </button>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Calculating your carbon footprint...</p>
+        </div>
+
+        <!-- Results -->
+        <div class="results-container" id="results">
+            <div class="result-hero">
+                <div class="big-number" id="totalEmissions">0</div>
+                <div class="unit">kg CO₂e</div>
+                <div class="label" id="tripLabel">Complete trip emissions</div>
+            </div>
+
+            <div class="equivalents">
+                <div class="equivalent-card">
+                    <div class="emoji">🌳</div>
+                    <div class="value" id="treesNeeded">0</div>
+                    <div class="label">Trees to offset</div>
+                </div>
+                <div class="equivalent-card">
+                    <div class="emoji">🚗</div>
+                    <div class="value" id="drivingKm">0</div>
+                    <div class="label">KM driving</div>
+                </div>
+                <div class="equivalent-card">
+                    <div class="emoji">📺</div>
+                    <div class="value" id="streamingHours">0</div>
+                    <div class="label">Hours Netflix</div>
+                </div>
+            </div>
+
+            <div class="breakdown" id="breakdown">
+                <div class="breakdown-item" id="flightRow">
+                    <span>✈️ Flights</span>
+                    <span id="flightValue">0 kg</span>
+                </div>
+                <div class="breakdown-item" id="hotelRow" style="display: none;">
+                    <span>🏨 Hotel + Breakfast</span>
+                    <span id="hotelValue">0 kg</span>
+                </div>
+                <div class="breakdown-item" id="transportRow" style="display: none;">
+                    <span>🚕 Ground Transport</span>
+                    <span id="transportValue">0 kg</span>
+                </div>
+                <div class="breakdown-item">
+                    <span><strong>Total</strong></span>
+                    <span id="totalValue"><strong>0 kg</strong></span>
+                </div>
+            </div>
+
+            <div class="card" id="alternativesSection" style="margin-top: 1rem;">
+                <div class="section-header">
+                    <span class="emoji">💡</span>
+                    <h3>Greener Alternatives</h3>
+                </div>
+                <div id="alternativesList"></div>
+            </div>
+
+            <button class="btn btn-primary" onclick="resetForm()" style="margin-top: 1rem;">
+                ← Calculate Another Trip
+            </button>
+        </div>
+
+        <div class="footer-note">
+            Aligned with <a href="https://www.icao.int/environmental-protection/CarbonOffset/Pages/default.aspx" target="_blank">ICAO</a>, 
+            <a href="https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2024" target="_blank">DEFRA 2024</a>, 
+            and <a href="https://www.myclimate.org" target="_blank">myclimate</a>
+        </div>
+    </div>
+
+    <script>
+        // Section state
+        const sections = {
+            hotel: false,
+            transfer: false,
+            cityTransport: false
+        };
+
+        // City/country mapping
+        const airportCountries = {
+            'LHR': 'GB', 'CDG': 'FR', 'JFK': 'US', 'DUB': 'IE', 'SIN': 'SG',
+            'FRA': 'DE', 'MUC': 'DE', 'AMS': 'NL', 'DXB': 'AE', 'NRT': 'JP'
+        };
+
+        const airportCities = {
+            'LHR': 'London', 'CDG': 'Paris', 'JFK': 'New York', 'DUB': 'Dublin',
+            'SIN': 'Singapore', 'FRA': 'Frankfurt', 'MUC': 'Munich', 'AMS': 'Amsterdam'
+        };
+
+        function setRoute(origin, dest) {
+            document.getElementById('origin').value = origin;
+            document.getElementById('destination').value = dest;
+            if (airportCities[dest]) {
+                document.getElementById('hotelCity').value = airportCities[dest];
+            }
+            if (airportCountries[dest]) {
+                document.getElementById('hotelCountry').value = airportCountries[dest];
+            }
+        }
+
+        function toggleSection(section) {
+            sections[section] = !sections[section];
+            const toggle = document.getElementById(section + 'Toggle');
+            const content = document.getElementById(section + 'Content');
+            
+            if (sections[section]) {
+                toggle.classList.add('active');
+                content.classList.add('show');
+            } else {
+                toggle.classList.remove('active');
+                content.classList.remove('show');
+            }
+        }
+
+        async function calculate() {
+            const origin = document.getElementById('origin').value.toUpperCase().trim();
+            const destination = document.getElementById('destination').value.toUpperCase().trim();
+
+            if (!origin || !destination || origin.length !== 3 || destination.length !== 3) {
+                alert('Please enter valid 3-letter airport codes');
+                return;
+            }
+
+            document.getElementById('calculatorForm').style.display = 'none';
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('results').classList.remove('show');
+
+            // Build segments
+            const segments = [];
+            const cabinClass = document.getElementById('cabinClass').value;
+            const passengers = parseInt(document.getElementById('passengers').value);
+            const isReturn = document.getElementById('tripType').value === 'return';
+
+            const today = new Date();
+            const departDate = new Date(today);
+            departDate.setDate(departDate.getDate() + 7);
+
+            // Flight(s)
+            segments.push({
+                type: 'flight',
+                origin: origin,
+                destination: destination,
+                departure_date: departDate.toISOString().split('T')[0],
+                cabin_class: cabinClass
+            });
+
+            if (isReturn) {
+                const returnDate = new Date(departDate);
+                returnDate.setDate(returnDate.getDate() + 3);
+                segments.push({
+                    type: 'flight',
+                    origin: destination,
+                    destination: origin,
+                    departure_date: returnDate.toISOString().split('T')[0],
+                    cabin_class: cabinClass
+                });
+            }
+
+            // Hotel
+            if (sections.hotel) {
+                const nights = parseInt(document.getElementById('hotelNights').value);
+                const checkOut = new Date(departDate);
+                checkOut.setDate(checkOut.getDate() + nights);
+
+                segments.push({
+                    type: 'hotel',
+                    location: {
+                        city: document.getElementById('hotelCity').value || airportCities[destination] || destination,
+                        country_code: document.getElementById('hotelCountry').value
+                    },
+                    check_in: departDate.toISOString().split('T')[0],
+                    check_out: checkOut.toISOString().split('T')[0],
+                    star_rating: parseInt(document.getElementById('hotelStars').value),
+                    room_count: parseInt(document.getElementById('hotelRooms').value),
+                    persons: passengers,
+                    breakfast: document.getElementById('hotelBreakfast').value
+                });
+            }
+
+            // Airport Transfer
+            if (sections.transfer) {
+                const direction = document.getElementById('transferDirection').value;
+                segments.push({
+                    type: 'transfer',
+                    airport: destination,
+                    vehicle_type: document.getElementById('transferType').value,
+                    round_trip: direction === 'both'
+                });
+            }
+
+            // City Transport
+            if (sections.cityTransport) {
+                segments.push({
+                    type: 'transport',
+                    vehicle_type: document.getElementById('cityVehicleType').value,
+                    distance_km: parseInt(document.getElementById('cityKm').value)
+                });
+            }
+
+            try {
+                const response = await fetch('/v1/assess', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        trip_id: 'ui_' + Date.now(),
+                        traveler_count: passengers,
+                        segments: segments,
+                        options: { include_alternatives: true, alternative_count: 3 }
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.message || 'Calculation failed');
+                
+                displayResults(data, isReturn, passengers);
+            } catch (error) {
+                alert('Error: ' + error.message);
+                document.getElementById('calculatorForm').style.display = 'block';
+            } finally {
+                document.getElementById('loading').classList.remove('show');
+            }
+        }
+
+        function displayResults(data, isReturn, passengers) {
+            document.getElementById('results').classList.add('show');
+
+            const total = data.total_emissions;
+            document.getElementById('totalEmissions').textContent = Math.round(total.co2e_kg).toLocaleString();
+            
+            const tripDesc = isReturn ? 'Return trip' : 'One-way';
+            const passDesc = passengers > 1 ? `${passengers} passengers` : '1 passenger';
+            document.getElementById('tripLabel').textContent = `${tripDesc} • ${passDesc}`;
+
+            document.getElementById('treesNeeded').textContent = Math.round(total.equivalent.trees_to_offset);
+            document.getElementById('drivingKm').textContent = Math.round(total.equivalent.driving_km).toLocaleString();
+            document.getElementById('streamingHours').textContent = Math.round(total.equivalent.streaming_hours).toLocaleString();
+
+            // Breakdown
+            document.getElementById('flightValue').textContent = `${Math.round(total.breakdown.flights_kg).toLocaleString()} kg`;
+            
+            if (total.breakdown.hotels_kg > 0) {
+                document.getElementById('hotelRow').style.display = 'flex';
+                document.getElementById('hotelValue').textContent = `${Math.round(total.breakdown.hotels_kg).toLocaleString()} kg`;
+            } else {
+                document.getElementById('hotelRow').style.display = 'none';
+            }
+
+            if (total.breakdown.transport_kg > 0) {
+                document.getElementById('transportRow').style.display = 'flex';
+                document.getElementById('transportValue').textContent = `${Math.round(total.breakdown.transport_kg).toLocaleString()} kg`;
+            } else {
+                document.getElementById('transportRow').style.display = 'none';
+            }
+
+            document.getElementById('totalValue').innerHTML = `<strong>${Math.round(total.co2e_kg).toLocaleString()} kg</strong>`;
+
+            // Alternatives
+            displayAlternatives(data.lower_impact_alternatives || [], total.co2e_kg);
+        }
+
+        function displayAlternatives(alternatives, originalEmissions) {
+            const container = document.getElementById('alternativesList');
+            const valid = alternatives.filter(a => a.savings && a.savings.percentage > 5);
+
+            if (valid.length === 0) {
+                container.innerHTML = `
+                    <p style="text-align: center; color: var(--gray-500); padding: 1rem;">
+                        No significantly greener alternatives available for this route.<br>
+                        <span style="font-size: 0.85rem;">Consider carbon offsetting or video conferencing.</span>
+                    </p>
+                `;
+                return;
+            }
+
+            container.innerHTML = valid.map((alt, i) => {
+                const icon = alt.alternative_id.includes('train') ? '🚂' : 
+                             alt.alternative_id.includes('hotel') ? '🌿' : '✨';
+                const title = alt.alternative_id.includes('train') ? 'Take the Train' :
+                              alt.alternative_id.includes('hotel') ? 'Eco-Certified Hotel' : 'Combined Savings';
+                
+                return `
+                    <div class="alternative-card ${i === 0 ? 'best' : ''}">
+                        <div class="alternative-header">
+                            <span class="alternative-title">${icon} ${title}</span>
+                            <span class="savings-badge">-${Math.round(alt.savings.percentage)}%</span>
+                        </div>
+                        <div class="alternative-reason">
+                            💡 ${alt.recommendation_reason}<br>
+                            <strong>Saves ${Math.round(alt.savings.absolute_kg)} kg CO₂e</strong>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function resetForm() {
+            document.getElementById('results').classList.remove('show');
+            document.getElementById('calculatorForm').style.display = 'block';
+        }
+
+        // Auto-uppercase airport codes
+        ['origin', 'destination'].forEach(id => {
+            document.getElementById(id).addEventListener('input', function() {
+                this.value = this.value.toUpperCase();
+            });
+        });
+    </script>
+</body>
+</html>

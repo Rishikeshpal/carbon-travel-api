@@ -1,0 +1,147 @@
+{
+  "description": "ESG Report Request for CSRD Compliance - Q1 2025",
+
+  "request": {
+    "organization_id": "org_acme_corp_001",
+    "period": {
+      "start_date": "2025-01-01",
+      "end_date": "2025-03-31"
+    },
+    "report_format": "json",
+    "include_blockchain_attestation": true
+  },
+
+  "response": {
+    "report_id": "rpt_c3d4e5f6-a7b8-9012-cdef-345678901234",
+    "organization_id": "org_acme_corp_001",
+    "period": {
+      "start_date": "2025-01-01",
+      "end_date": "2025-03-31"
+    },
+    "summary": {
+      "total_trips": 47,
+      "total_travelers": 89,
+      "total_emissions_kg": 142567.8,
+      "total_emissions_tonnes": 142.6,
+      "emissions_per_trip_kg": 3033.4,
+      "emissions_per_traveler_kg": 1601.9,
+      "emissions_by_category": {
+        "flights_kg": 118234.5,
+        "flights_percent": 82.9,
+        "hotels_kg": 24333.3,
+        "hotels_percent": 17.1
+      },
+      "emissions_by_haul_type": {
+        "short_haul_kg": 28456.2,
+        "short_haul_percent": 24.1,
+        "medium_haul_kg": 31234.5,
+        "medium_haul_percent": 26.4,
+        "long_haul_kg": 58543.8,
+        "long_haul_percent": 49.5
+      },
+      "emissions_by_cabin_class": {
+        "economy_kg": 42567.8,
+        "economy_percent": 36.0,
+        "premium_economy_kg": 12345.6,
+        "premium_economy_percent": 10.4,
+        "business_kg": 58234.5,
+        "business_percent": 49.2,
+        "first_kg": 5086.6,
+        "first_percent": 4.3
+      },
+      "top_routes": [
+        { "route": "LHR-JFK", "trips": 12, "emissions_kg": 38456.7 },
+        { "route": "LHR-SIN", "trips": 5, "emissions_kg": 28234.5 },
+        { "route": "LHR-DXB", "trips": 8, "emissions_kg": 21567.8 },
+        { "route": "LHR-FRA", "trips": 9, "emissions_kg": 8234.5 },
+        { "route": "LHR-CDG", "trips": 6, "emissions_kg": 3456.7 }
+      ],
+      "year_over_year_change": {
+        "emissions_change_percent": -12.4,
+        "trips_change_percent": 3.2,
+        "intensity_improvement_percent": 15.1,
+        "note": "Emissions decreased despite more trips due to rail substitution and eco-hotel policies"
+      },
+      "avoided_emissions": {
+        "total_kg": 18456.7,
+        "from_rail_substitution_kg": 12345.6,
+        "from_eco_hotels_kg": 4567.8,
+        "from_video_conferencing_kg": 1543.3,
+        "equivalent_trips_avoided": 6.1
+      }
+    },
+    "csrd_compliance": {
+      "compliant": true,
+      "standards_met": [
+        "ESRS E1 - Climate Change",
+        "GHG Protocol Scope 3 Category 6",
+        "ISO 14064-1:2018"
+      ],
+      "data_quality_score": 0.84,
+      "data_quality_breakdown": {
+        "primary_data_percent": 78,
+        "secondary_data_percent": 18,
+        "estimated_data_percent": 4
+      },
+      "assurance_ready": true,
+      "notes": [
+        "All flight emissions calculated using ICAO methodology with RF multiplier",
+        "Hotel emissions use regional grid carbon intensities from ENTSO-E",
+        "4% of hotel data estimated using IPCC defaults for non-EU destinations"
+      ]
+    },
+    "methodology": {
+      "emission_factors": {
+        "flights": "DEFRA 2024 + ICAO Carbon Calculator v12",
+        "hotels": "Cornell HSBI + ENTSO-E grid data"
+      },
+      "global_warming_potentials": "IPCC AR6 (100-year)",
+      "radiative_forcing": "Applied 1.9x multiplier to all flights",
+      "allocation_method": "Per-passenger based on cabin class floor space"
+    },
+    "blockchain_attestation": {
+      "enabled": true,
+      "chain": "VeChain",
+      "transaction_hash": "0x7f8e9d0c1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d",
+      "block_number": 18234567,
+      "timestamp": "2025-04-01T00:15:32Z",
+      "verification_url": "https://explore.vechain.org/transactions/0x7f8e9d0c1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d",
+      "data_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "attestation_type": "Report hash anchored on-chain for tamper-proof audit trail"
+    },
+    "recommendations": {
+      "high_impact": [
+        {
+          "action": "Mandate rail for LHR-CDG and LHR-AMS routes",
+          "potential_savings_kg": 8234.5,
+          "implementation": "Update travel policy, integrate Eurostar booking"
+        },
+        {
+          "action": "Shift long-haul to premium economy from business where possible",
+          "potential_savings_kg": 12456.7,
+          "implementation": "Tier travel class by trip duration, not seniority"
+        }
+      ],
+      "medium_impact": [
+        {
+          "action": "Preferred eco-certified hotel program",
+          "potential_savings_kg": 4567.8,
+          "implementation": "Partner with Green Key certified hotels in top destinations"
+        }
+      ],
+      "targets": {
+        "recommended_2026_target_tonnes": 114.1,
+        "reduction_required_percent": 20,
+        "aligned_with": "SBTi 1.5°C pathway"
+      }
+    },
+    "download_urls": {
+      "json": "https://api.carbontravelintel.io/v1/reports/rpt_c3d4e5f6-a7b8-9012-cdef-345678901234/download?format=json",
+      "pdf": "https://api.carbontravelintel.io/v1/reports/rpt_c3d4e5f6-a7b8-9012-cdef-345678901234/download?format=pdf",
+      "csrd_xml": "https://api.carbontravelintel.io/v1/reports/rpt_c3d4e5f6-a7b8-9012-cdef-345678901234/download?format=csrd_xml",
+      "excel": "https://api.carbontravelintel.io/v1/reports/rpt_c3d4e5f6-a7b8-9012-cdef-345678901234/download?format=xlsx"
+    },
+    "created_at": "2025-04-01T00:15:32Z",
+    "expires_at": "2026-04-01T00:15:32Z"
+  }
+}

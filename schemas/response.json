@@ -1,0 +1,223 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://api.carbontravelintel.io/schemas/response.json",
+  "title": "Carbon Travel API - Assessment Response",
+  "description": "JSON Schema for carbon assessment response",
+  "type": "object",
+  "required": ["assessment_id", "total_emissions", "confidence_score", "segments", "created_at"],
+  "properties": {
+    "assessment_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for this assessment"
+    },
+    "trip_id": {
+      "type": "string",
+      "description": "Client-provided trip ID (echoed back)"
+    },
+    "total_emissions": {
+      "$ref": "#/definitions/EmissionsTotal"
+    },
+    "confidence_score": {
+      "$ref": "#/definitions/ConfidenceScore"
+    },
+    "segments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SegmentEmissions"
+      }
+    },
+    "lower_impact_alternatives": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Alternative"
+      }
+    },
+    "methodology": {
+      "$ref": "#/definitions/Methodology"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "definitions": {
+    "EmissionsTotal": {
+      "type": "object",
+      "required": ["co2e_kg", "unit"],
+      "properties": {
+        "co2e_kg": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Total CO₂ equivalent emissions in kilograms"
+        },
+        "unit": {
+          "type": "string",
+          "const": "kg_co2e"
+        },
+        "breakdown": {
+          "type": "object",
+          "properties": {
+            "flights_kg": { "type": "number", "minimum": 0 },
+            "hotels_kg": { "type": "number", "minimum": 0 },
+            "trains_kg": { "type": "number", "minimum": 0 },
+            "ground_transport_kg": { "type": "number", "minimum": 0 }
+          }
+        },
+        "per_traveler_kg": {
+          "type": "number",
+          "minimum": 0
+        },
+        "equivalent": {
+          "type": "object",
+          "properties": {
+            "trees_to_offset": { "type": "number", "minimum": 0 },
+            "driving_km": { "type": "number", "minimum": 0 },
+            "streaming_hours": { "type": "number", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "ConfidenceScore": {
+      "type": "object",
+      "required": ["score", "level"],
+      "properties": {
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "level": {
+          "type": "string",
+          "enum": ["high", "medium", "low"]
+        },
+        "factors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "factor": { "type": "string" },
+              "impact": { "type": "string", "enum": ["positive", "negative", "neutral"] },
+              "description": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "SegmentEmissions": {
+      "type": "object",
+      "required": ["segment_index", "type", "emissions_kg"],
+      "properties": {
+        "segment_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "type": {
+          "type": "string",
+          "enum": ["flight", "hotel", "train"]
+        },
+        "emissions_kg": {
+          "type": "number",
+          "minimum": 0
+        },
+        "details": {
+          "oneOf": [
+            { "$ref": "#/definitions/FlightEmissionDetails" },
+            { "$ref": "#/definitions/HotelEmissionDetails" }
+          ]
+        }
+      }
+    },
+    "FlightEmissionDetails": {
+      "type": "object",
+      "properties": {
+        "distance_km": { "type": "number", "minimum": 0 },
+        "haul_type": { "type": "string", "enum": ["short", "medium", "long"] },
+        "radiative_forcing_multiplier": { "type": "number" },
+        "fuel_burn_kg": { "type": "number", "minimum": 0 },
+        "aircraft_type": { "type": "string" },
+        "load_factor": { "type": "number", "minimum": 0, "maximum": 1 },
+        "cabin_class_multiplier": { "type": "number", "minimum": 1 },
+        "emission_factor_source": { "type": "string" }
+      }
+    },
+    "HotelEmissionDetails": {
+      "type": "object",
+      "properties": {
+        "nights": { "type": "integer", "minimum": 1 },
+        "emissions_per_night_kg": { "type": "number", "minimum": 0 },
+        "grid_carbon_intensity": {
+          "type": "object",
+          "properties": {
+            "value": { "type": "number", "minimum": 0 },
+            "source": { "type": "string" },
+            "country": { "type": "string" }
+          }
+        },
+        "energy_consumption_kwh": { "type": "number", "minimum": 0 },
+        "emission_factor_source": { "type": "string" }
+      }
+    },
+    "Alternative": {
+      "type": "object",
+      "required": ["alternative_id", "total_emissions", "savings", "segments"],
+      "properties": {
+        "alternative_id": { "type": "string" },
+        "total_emissions": { "$ref": "#/definitions/EmissionsTotal" },
+        "savings": {
+          "type": "object",
+          "required": ["absolute_kg", "percentage"],
+          "properties": {
+            "absolute_kg": { "type": "number", "minimum": 0 },
+            "percentage": { "type": "number", "minimum": 0, "maximum": 100 },
+            "label": { "type": "string" }
+          }
+        },
+        "segments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "original_segment_index": { "type": "integer" },
+              "description": { "type": "string" },
+              "emissions_kg": { "type": "number", "minimum": 0 },
+              "details": { "type": "object" }
+            }
+          }
+        },
+        "tradeoffs": {
+          "type": "object",
+          "properties": {
+            "time_difference_minutes": { "type": "integer" },
+            "estimated_cost_difference_eur": { "type": "number" },
+            "comfort_score": { "type": "number", "minimum": 0, "maximum": 5 }
+          }
+        },
+        "recommendation_reason": { "type": "string" }
+      }
+    },
+    "Methodology": {
+      "type": "object",
+      "properties": {
+        "standards": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "calculation_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "emission_factors_version": { "type": "string" },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

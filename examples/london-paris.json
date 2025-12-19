@@ -1,0 +1,277 @@
+{
+  "description": "London to Paris 2-day business trip - Request and Response",
+  
+  "request": {
+    "trip_id": "trip_london_paris_001",
+    "traveler_count": 1,
+    "segments": [
+      {
+        "type": "flight",
+        "origin": "LHR",
+        "destination": "CDG",
+        "departure_date": "2025-03-15",
+        "departure_time": "09:15",
+        "cabin_class": "economy",
+        "carrier_code": "BA",
+        "flight_number": "BA306"
+      },
+      {
+        "type": "hotel",
+        "location": {
+          "city": "Paris",
+          "country_code": "FR"
+        },
+        "check_in": "2025-03-15",
+        "check_out": "2025-03-17",
+        "star_rating": 4,
+        "room_count": 1
+      },
+      {
+        "type": "flight",
+        "origin": "CDG",
+        "destination": "LHR",
+        "departure_date": "2025-03-17",
+        "departure_time": "18:30",
+        "cabin_class": "economy",
+        "carrier_code": "AF",
+        "flight_number": "AF1680",
+        "is_return": true
+      }
+    ],
+    "options": {
+      "include_alternatives": true,
+      "alternative_count": 3,
+      "include_methodology": true
+    }
+  },
+
+  "response": {
+    "assessment_id": "assess_a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "trip_id": "trip_london_paris_001",
+    "total_emissions": {
+      "co2e_kg": 287.4,
+      "unit": "kg_co2e",
+      "breakdown": {
+        "flights_kg": 245.2,
+        "hotels_kg": 42.2
+      },
+      "per_traveler_kg": 287.4,
+      "equivalent": {
+        "trees_to_offset": 13.2,
+        "driving_km": 1842,
+        "streaming_hours": 4790
+      }
+    },
+    "confidence_score": {
+      "score": 0.87,
+      "level": "high",
+      "factors": [
+        {
+          "factor": "airline_specific_data",
+          "impact": "positive",
+          "description": "BA and AF fleet efficiency data available"
+        },
+        {
+          "factor": "eu_grid_data",
+          "impact": "positive",
+          "description": "France has measured grid carbon intensity (56g CO₂/kWh)"
+        },
+        {
+          "factor": "short_haul_route",
+          "impact": "positive",
+          "description": "Well-documented route with high data quality"
+        }
+      ]
+    },
+    "segments": [
+      {
+        "segment_index": 0,
+        "type": "flight",
+        "emissions_kg": 122.6,
+        "details": {
+          "distance_km": 344,
+          "haul_type": "short",
+          "radiative_forcing_multiplier": 1.9,
+          "fuel_burn_kg": 38.5,
+          "aircraft_type": "A320neo",
+          "load_factor": 0.82,
+          "emission_factor_source": "ICAO Carbon Calculator 2024"
+        }
+      },
+      {
+        "segment_index": 1,
+        "type": "hotel",
+        "emissions_kg": 42.2,
+        "details": {
+          "nights": 2,
+          "emissions_per_night_kg": 21.1,
+          "grid_carbon_intensity": {
+            "value": 56.2,
+            "source": "ENTSO-E 2024 average",
+            "country": "FR"
+          },
+          "energy_consumption_kwh": 75.4,
+          "emission_factor_source": "Cornell Hotel Sustainability Benchmarking Index"
+        }
+      },
+      {
+        "segment_index": 2,
+        "type": "flight",
+        "emissions_kg": 122.6,
+        "details": {
+          "distance_km": 344,
+          "haul_type": "short",
+          "radiative_forcing_multiplier": 1.9,
+          "fuel_burn_kg": 38.5,
+          "aircraft_type": "A319",
+          "load_factor": 0.84,
+          "emission_factor_source": "ICAO Carbon Calculator 2024"
+        }
+      }
+    ],
+    "lower_impact_alternatives": [
+      {
+        "alternative_id": "alt_001",
+        "total_emissions": {
+          "co2e_kg": 58.6,
+          "unit": "kg_co2e",
+          "breakdown": {
+            "trains_kg": 16.4,
+            "hotels_kg": 42.2
+          }
+        },
+        "savings": {
+          "absolute_kg": 228.8,
+          "percentage": 79.6,
+          "label": "Saves 228.8 kg CO₂e (80% reduction)"
+        },
+        "segments": [
+          {
+            "type": "train",
+            "original_segment_index": 0,
+            "description": "Eurostar 9014, London St Pancras → Paris Gare du Nord",
+            "emissions_kg": 8.2
+          },
+          {
+            "type": "hotel",
+            "original_segment_index": 1,
+            "description": "Same hotel (no change)",
+            "emissions_kg": 42.2
+          },
+          {
+            "type": "train",
+            "original_segment_index": 2,
+            "description": "Eurostar 9050, Paris Gare du Nord → London St Pancras",
+            "emissions_kg": 8.2
+          }
+        ],
+        "tradeoffs": {
+          "time_difference_minutes": 95,
+          "estimated_cost_difference_eur": -45.00,
+          "comfort_score": 4.5
+        },
+        "recommendation_reason": "Eurostar train emits 80% less CO₂ than flying, takes only 2h16m city-center to city-center, and is often cheaper than flights when booked in advance."
+      },
+      {
+        "alternative_id": "alt_002",
+        "total_emissions": {
+          "co2e_kg": 262.4,
+          "unit": "kg_co2e",
+          "breakdown": {
+            "flights_kg": 245.2,
+            "hotels_kg": 17.2
+          }
+        },
+        "savings": {
+          "absolute_kg": 25.0,
+          "percentage": 8.7,
+          "label": "Saves 25.0 kg CO₂e (9% reduction)"
+        },
+        "segments": [
+          {
+            "type": "flight",
+            "original_segment_index": 0,
+            "description": "Same flight (no change)",
+            "emissions_kg": 122.6
+          },
+          {
+            "type": "hotel",
+            "original_segment_index": 1,
+            "description": "Eco-certified 3-star hotel, Central Paris",
+            "emissions_kg": 17.2
+          },
+          {
+            "type": "flight",
+            "original_segment_index": 2,
+            "description": "Same flight (no change)",
+            "emissions_kg": 122.6
+          }
+        ],
+        "tradeoffs": {
+          "time_difference_minutes": 0,
+          "estimated_cost_difference_eur": -80.00,
+          "comfort_score": 3.8
+        },
+        "recommendation_reason": "Switching to an eco-certified hotel reduces accommodation emissions by 59%."
+      },
+      {
+        "alternative_id": "alt_003",
+        "total_emissions": {
+          "co2e_kg": 33.6,
+          "unit": "kg_co2e",
+          "breakdown": {
+            "trains_kg": 16.4,
+            "hotels_kg": 17.2
+          }
+        },
+        "savings": {
+          "absolute_kg": 253.8,
+          "percentage": 88.3,
+          "label": "Saves 253.8 kg CO₂e (88% reduction)"
+        },
+        "segments": [
+          {
+            "type": "train",
+            "original_segment_index": 0,
+            "description": "Eurostar 9014, London St Pancras → Paris Gare du Nord",
+            "emissions_kg": 8.2
+          },
+          {
+            "type": "hotel",
+            "original_segment_index": 1,
+            "description": "Eco-certified 3-star hotel, Central Paris",
+            "emissions_kg": 17.2
+          },
+          {
+            "type": "train",
+            "original_segment_index": 2,
+            "description": "Eurostar 9050, Paris Gare du Nord → London St Pancras",
+            "emissions_kg": 8.2
+          }
+        ],
+        "tradeoffs": {
+          "time_difference_minutes": 95,
+          "estimated_cost_difference_eur": -125.00,
+          "comfort_score": 4.3
+        },
+        "recommendation_reason": "Best overall: Combining Eurostar with an eco-hotel achieves 88% emission reduction."
+      }
+    ],
+    "methodology": {
+      "standards": [
+        "ICAO Carbon Emissions Calculator Methodology (v12)",
+        "GHG Protocol Scope 3 Category 6",
+        "DEFRA Greenhouse Gas Reporting Conversion Factors 2024"
+      ],
+      "calculation_date": "2025-01-15",
+      "emission_factors_version": "2024.2",
+      "notes": [
+        "Flight emissions include radiative forcing multiplier of 1.9 for high-altitude effects",
+        "Hotel emissions based on France's average grid carbon intensity of 56.2 gCO₂/kWh",
+        "Train emissions based on Eurostar's published 2024 figures of 4.06g CO₂/passenger-km"
+      ]
+    },
+    "created_at": "2025-01-15T10:30:00Z",
+    "expires_at": "2025-04-15T10:30:00Z"
+  }
+}
