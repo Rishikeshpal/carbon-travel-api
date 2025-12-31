@@ -35,11 +35,13 @@ def create_app(config_name: str = "development") -> Flask:
     from app.routes.alternatives import alternatives_bp
     from app.routes.factors import factors_bp
     from app.routes.reports import reports_bp
+    from app.routes.trains import bp as trains_bp
     
     app.register_blueprint(assess_bp, url_prefix="/v1")
     app.register_blueprint(alternatives_bp, url_prefix="/v1")
     app.register_blueprint(factors_bp, url_prefix="/v1")
     app.register_blueprint(reports_bp, url_prefix="/v1")
+    app.register_blueprint(trains_bp)
     
     # Root endpoint - serve the UI
     @app.route("/")
@@ -61,7 +63,10 @@ def create_app(config_name: str = "development") -> Flask:
                 "alternatives": "POST /v1/alternatives",
                 "flight_factors": "GET /v1/factors/flights",
                 "hotel_factors": "GET /v1/factors/hotels",
-                "esg_report": "POST /v1/reports/esg"
+                "esg_report": "POST /v1/reports/esg",
+                "train_search": "GET /v1/trains/search",
+                "train_compare": "GET /v1/trains/compare",
+                "train_routes": "GET /v1/trains/routes"
             }
         }
     

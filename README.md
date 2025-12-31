@@ -2,7 +2,34 @@
 
 > **"Stripe for sustainability data in travel"**
 
-A Carbon- & Resource-Aware Travel Intelligence Platform providing real-time carbon impact calculations for flights, hotels, and ground transport with lower-impact alternatives.
+A Carbon- & Resource-Aware Travel Intelligence Platform providing real-time carbon impact calculations for flights, hotels, ground transport, and European train alternatives.
+
+---
+
+## 📖 About
+
+### The Problem
+
+Travel accounts for **8% of global carbon emissions**, yet most travelers have no visibility into their environmental impact. With the EU's CSRD mandates requiring emissions disclosure, companies need accurate, auditable travel carbon data.
+
+### The Solution
+
+A **single API** to calculate complete trip carbon footprints:
+
+- **Flights** — Origin/destination, cabin class, haul type
+- **Hotels** — Star rating, regional grid intensity, breakfast emissions
+- **Ground Transport** — Airport transfers, Uber, taxi, public transit
+- **European Trains** — 19+ high-speed routes with real schedules, station info, and booking links
+
+### Key Differentiators
+
+| Feature | Description |
+|---------|-------------|
+| ✅ **EU-First** | Granular European grid carbon data (ENTSO-E) |
+| ✅ **Audit-Ready** | CSRD-aligned methodology with confidence scoring |
+| ✅ **Actionable** | Suggests lower-impact train alternatives |
+| ✅ **Complete** | Flights + hotels + breakfast + transport + trains |
+| ✅ **Bookable** | Direct links to Trainline, Omio, Eurostar, etc. |
 
 ---
 
@@ -11,11 +38,12 @@ A Carbon- & Resource-Aware Travel Intelligence Platform providing real-time carb
 | Feature | Description |
 |---------|-------------|
 | ✈️ **Flight Emissions** | Short/long haul, cabin class, return trips |
-| 🏨 **Hotel Emissions** | Star rating, energy consumption, regional grid intensity |
-| 🍳 **Breakfast Impact** | Continental, buffet, full English, vegan options |
-| 🚕 **Ground Transport** | Airport transfers, Uber, taxi, public transit |
-| 🌿 **Alternatives Engine** | Train vs flight, eco-hotel suggestions |
-| 📊 **Confidence Scoring** | Data quality transparency |
+| 🏨 **Hotel Emissions** | Star rating, energy use, grid intensity |
+| 🍳 **Breakfast Impact** | Continental, buffet, full English, vegan |
+| 🚕 **Ground Transport** | Airport transfers, Uber, taxi, metro |
+| 🚂 **European Trains** | 19 routes with schedules & booking links |
+| 🌿 **Alternatives** | Train vs flight comparisons |
+| 📊 **Confidence Score** | Data quality transparency |
 
 ---
 
@@ -23,39 +51,43 @@ A Carbon- & Resource-Aware Travel Intelligence Platform providing real-time carb
 
 ### Prerequisites
 - Python 3.10+
-- pip
 
-### Local Development
+### Installation
 
 ```bash
-# 1. Clone and navigate
 cd carbon-travel-api
 
-# 2. Create virtual environment
+# Create virtual environment
 python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
-# 3. Install dependencies
+# Install dependencies
 pip install -r requirements.txt
 
-# 4. Run the server
+# Run the server
 python app.py
 ```
 
-The app runs at **http://localhost:8080**
+Server runs at **http://localhost:8080**
 
 ### Test the API
 
 ```bash
+# Health check
+curl http://localhost:8080/health
+
+# Calculate flight emissions
 curl -X POST http://localhost:8080/v1/assess \
   -H "Content-Type: application/json" \
   -d '{
-    "trip_id": "test_trip",
-    "traveler_count": 1,
+    "trip_id": "test",
     "segments": [
       {"type": "flight", "origin": "LHR", "destination": "CDG", "departure_date": "2025-04-01", "cabin_class": "economy"}
     ]
   }'
+
+# Compare train vs flight
+curl "http://localhost:8080/v1/trains/compare?origin=LHR&destination=CDG"
 ```
 
 ---
@@ -64,151 +96,68 @@ curl -X POST http://localhost:8080/v1/assess \
 
 Access the interactive calculator at **http://localhost:8080**
 
-Features:
-- Quick route buttons (Dublin→Singapore, London→Paris, etc.)
-- Optional hotel with breakfast selection
-- Airport transfer options (Uber, taxi, metro)
-- City transport during stay
-- Real-time emission breakdown
-
----
-
-## 📦 Deployment
-
-### Option 1: Docker (Recommended)
-
-```bash
-# Build the image
-docker build -t carbon-travel-api .
-
-# Run the container
-docker run -d -p 8080:8080 --name carbon-api carbon-travel-api
-
-# Verify it's running
-curl http://localhost:8080/health
-```
-
-### Option 2: Docker Compose
-
-Create `docker-compose.yml`:
-```yaml
-version: '3.8'
-services:
-  api:
-    build: .
-    ports:
-      - "8080:8080"
-    environment:
-      - FLASK_ENV=production
-    restart: unless-stopped
-```
-
-Then run:
-```bash
-docker-compose up -d
-```
-
-### Option 3: Cloud Platforms
-
-#### AWS (Elastic Beanstalk)
-```bash
-# Install EB CLI
-pip install awsebcli
-
-# Initialize and deploy
-eb init -p python-3.11 carbon-travel-api
-eb create production
-eb deploy
-```
-
-#### Google Cloud Run
-```bash
-# Build and push to GCR
-gcloud builds submit --tag gcr.io/PROJECT_ID/carbon-travel-api
-
-# Deploy
-gcloud run deploy carbon-travel-api \
-  --image gcr.io/PROJECT_ID/carbon-travel-api \
-  --port 8080 \
-  --allow-unauthenticated
-```
-
-#### Fly.io
-```bash
-# Install flyctl and authenticate
-fly auth login
-
-# Launch (creates fly.toml automatically)
-fly launch
-
-# Deploy
-fly deploy
-```
-
-#### Railway / Render
-1. Connect your GitHub repository
-2. Set build command: `pip install -r requirements.txt`
-3. Set start command: `gunicorn --bind 0.0.0.0:$PORT app:create_app()`
-4. Deploy
-
-### Option 4: Manual VPS/Server
-
-```bash
-# SSH to your server
-ssh user@your-server
-
-# Clone the repository
-git clone <your-repo-url> carbon-travel-api
-cd carbon-travel-api
-
-# Setup virtual environment
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-
-# Run with gunicorn (production)
-gunicorn --bind 0.0.0.0:8080 --workers 2 --threads 4 "app:create_app()"
-
-# Or use systemd for auto-restart (create /etc/systemd/system/carbon-api.service)
-```
-
-Example systemd service file:
-```ini
-[Unit]
-Description=Carbon Travel API
-After=network.target
-
-[Service]
-User=www-data
-WorkingDirectory=/opt/carbon-travel-api
-Environment="PATH=/opt/carbon-travel-api/venv/bin"
-ExecStart=/opt/carbon-travel-api/venv/bin/gunicorn --bind 0.0.0.0:8080 --workers 2 "app:create_app()"
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-```
-
-```bash
-sudo systemctl enable carbon-api
-sudo systemctl start carbon-api
-```
+**Two tabs:**
+1. **✈️ Flight Calculator** — Full trip with hotels, transfers, city transport
+2. **🚂 European Trains** — Route finder with booking links
 
 ---
 
 ## 🔌 API Endpoints
+
+### Core Endpoints
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/` | GET | Web UI |
 | `/health` | GET | Health check |
 | `/v1/assess` | POST | Calculate trip emissions |
-| `/v1/assess/batch` | POST | Batch assessment (up to 100 trips) |
-| `/v1/alternatives` | POST | Find greener alternatives |
+| `/v1/assess/batch` | POST | Batch assessment |
+| `/v1/alternatives` | POST | Find greener options |
+
+### Train Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/v1/trains/search` | GET | Search train routes |
+| `/v1/trains/compare` | GET | Compare train vs flight |
+| `/v1/trains/routes` | GET | List all train routes |
+| `/v1/trains/book` | GET | Get booking URLs |
+
+### Factor Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
 | `/v1/factors/flights` | GET | Flight emission factors |
 | `/v1/factors/hotels` | GET | Hotel emission factors |
 | `/v1/factors/distance` | GET | Calculate route distance |
-| `/v1/factors/grid-intensity` | GET | Grid carbon intensity by region |
+
+---
+
+## 🚂 European Train Routes
+
+### Supported Routes (19 total)
+
+| Route | Operator | Duration | CO₂ Savings |
+|-------|----------|----------|-------------|
+| London → Paris | Eurostar | 2h 17m | **89%** |
+| London → Amsterdam | Eurostar | 3h 48m | 85% |
+| London → Brussels | Eurostar | 2h 00m | 88% |
+| Paris → Amsterdam | Thalys | 3h 15m | 82% |
+| Paris → Brussels | Thalys | 1h 22m | 90% |
+| Frankfurt → Munich | ICE | 3h 15m | 75% |
+| Madrid → Barcelona | AVE | 2h 35m | 80% |
+| Rome → Milan | Frecciarossa | 2h 55m | 76% |
+
+### Booking Platforms
+
+| Platform | Deep Link | Description |
+|----------|-----------|-------------|
+| 🎫 **Trainline** | ✅ Yes | Pre-fills route & date |
+| 🚂 **Omio** | ✅ Yes | Pre-fills route & date |
+| ⭐ **Eurostar** | Direct | Official booking |
+| 🌍 **Rail Europe** | Direct | 30+ countries |
+| 🇫🇷 **SNCF Connect** | Direct | French TGV |
+| 🇩🇪 **Deutsche Bahn** | Direct | German ICE |
 
 ---
 
@@ -216,21 +165,20 @@ sudo systemctl start carbon-api
 
 ### Flights (kg CO₂e per km per passenger)
 
-| Haul Type | Economy | Premium | Business | First |
-|-----------|---------|---------|----------|-------|
-| Short (<1500km) | 0.156 | 0.195 | 0.280 | 0.390 |
-| Medium (1500-4000km) | 0.130 | 0.163 | 0.234 | 0.325 |
-| Long (>4000km) | 0.111 | 0.139 | 0.200 | 0.278 |
+| Haul | Economy | Business | First |
+|------|---------|----------|-------|
+| Short (<1500km) | 0.156 | 0.280 | 0.390 |
+| Medium | 0.130 | 0.234 | 0.325 |
+| Long (>4000km) | 0.111 | 0.200 | 0.278 |
 
 ### Ground Transport (kg CO₂e per km)
 
 | Vehicle | Factor |
 |---------|--------|
-| Regular Taxi | 0.149 |
+| Taxi | 0.149 |
 | Uber/Bolt | 0.121 |
 | Electric Uber | 0.048 |
-| Local Bus | 0.089 |
-| Metro/Train | 0.029 |
+| Metro | 0.029 |
 
 ### Breakfast (kg CO₂e per person)
 
@@ -243,50 +191,93 @@ sudo systemctl start carbon-api
 
 ---
 
+## 📦 Deployment
+
+### Docker
+
+```bash
+# Build
+docker build -t carbon-travel-api .
+
+# Run
+docker run -d -p 8080:8080 carbon-travel-api
+
+# Verify
+curl http://localhost:8080/health
+```
+
+### Docker Compose
+
+```yaml
+version: '3.8'
+services:
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+```
+
+### Cloud Platforms
+
+**Google Cloud Run:**
+```bash
+gcloud builds submit --tag gcr.io/PROJECT_ID/carbon-travel-api
+gcloud run deploy --image gcr.io/PROJECT_ID/carbon-travel-api --port 8080
+```
+
+**Fly.io:**
+```bash
+fly launch
+fly deploy
+```
+
+---
+
 ## 📁 Project Structure
 
 ```
 carbon-travel-api/
 ├── app/
-│   ├── __init__.py          # Flask app factory
+│   ├── __init__.py           # Flask app factory
+│   ├── data/
+│   │   ├── airports.py       # Airport coordinates
+│   │   ├── emission_factors.py
+│   │   ├── grid_intensity.py
+│   │   └── transport_factors.py
 │   ├── routes/
-│   │   ├── assess.py        # /v1/assess endpoints
-│   │   ├── alternatives.py  # /v1/alternatives endpoints
-│   │   ├── factors.py       # /v1/factors endpoints
-│   │   └── reports.py       # /v1/reports endpoints
-│   ├── services/
-│   │   ├── flight_calculator.py
-│   │   ├── hotel_calculator.py
-│   │   ├── alternatives_engine.py
-│   │   └── confidence_scorer.py
-│   └── data/
-│       ├── airports.py         # Airport coordinates
-│       ├── emission_factors.py # CO₂e factors
-│       ├── grid_intensity.py   # Regional grid data
-│       └── transport_factors.py # Ground transport factors
+│   │   ├── assess.py         # /v1/assess
+│   │   ├── alternatives.py   # /v1/alternatives
+│   │   ├── factors.py        # /v1/factors
+│   │   ├── reports.py        # /v1/reports
+│   │   └── trains.py         # /v1/trains
+│   └── services/
+│       ├── flight_calculator.py
+│       ├── hotel_calculator.py
+│       ├── train_service.py
+│       ├── alternatives_engine.py
+│       └── confidence_scorer.py
 ├── templates/
-│   └── index.html           # Web UI
-├── docs/
-│   ├── CASE_STUDY.md        # Example use case
-│   └── SCHEMA.md            # API schema docs
-├── examples/                # Sample requests
-├── schemas/                 # JSON schemas
-├── app.py                   # Entry point
-├── config.py                # Configuration
-├── requirements.txt         # Dependencies
-├── Dockerfile               # Container build
-└── README.md                # This file
+│   └── index.html            # Web UI
+├── app.py                    # Entry point
+├── config.py                 # Configuration
+├── requirements.txt          # Dependencies
+├── Dockerfile                # Container build
+├── .gitignore
+└── .dockerignore
 ```
 
 ---
 
 ## 🌍 Data Sources
 
-- **ICAO Carbon Calculator** - Flight methodology
-- **DEFRA 2024** - UK Government emission factors
-- **ENTSO-E** - EU real-time grid intensity
-- **Cornell HSBI** - Hotel energy benchmarks
-- **UIC Railway Handbook** - Train emission factors
+| Source | Usage |
+|--------|-------|
+| **ICAO** | Flight emission methodology |
+| **DEFRA 2024** | UK Government emission factors |
+| **ENTSO-E** | EU real-time grid intensity |
+| **Cornell HSBI** | Hotel energy benchmarks |
+| **UIC Railway Handbook** | Train emission factors |
 
 ---
 
