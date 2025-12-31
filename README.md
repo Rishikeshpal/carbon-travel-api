@@ -2,7 +2,7 @@
 
 > **"Stripe for sustainability data in travel"**
 
-A Carbon- & Resource-Aware Travel Intelligence Platform providing real-time carbon impact calculations for flights, hotels, ground transport, and European train alternatives.
+A Carbon & Resource-Aware Travel Intelligence Platform providing real-time carbon impact calculations for flights, hotels, ground transport, and European train alternatives.
 
 ---
 
