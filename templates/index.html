@@ -4,167 +4,273 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carbon Travel Intelligence</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #059669;
-            --primary-dark: #047857;
-            --primary-light: #d1fae5;
-            --secondary: #0ea5e9;
-            --train-color: #7c3aed;
-            --train-light: #ede9fe;
-            --danger: #ef4444;
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a25;
+            --bg-card-hover: #222230;
+            --accent-1: #00d4aa;
+            --accent-2: #7c3aed;
+            --accent-3: #3b82f6;
+            --gradient-1: linear-gradient(135deg, #00d4aa 0%, #00a885 100%);
+            --gradient-2: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+            --gradient-3: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+            --gradient-glow: linear-gradient(135deg, rgba(0,212,170,0.15) 0%, rgba(124,58,237,0.15) 100%);
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --border: #27272a;
+            --success: #22c55e;
             --warning: #f59e0b;
-            --gray-50: #f9fafb;
-            --gray-100: #f3f4f6;
-            --gray-200: #e5e7eb;
-            --gray-300: #d1d5db;
-            --gray-500: #6b7280;
-            --gray-700: #374151;
-            --gray-900: #111827;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 100%);
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
             min-height: 100vh;
-            color: var(--gray-900);
+            color: var(--text-primary);
+            background-image: 
+                radial-gradient(ellipse at 20% 0%, rgba(0,212,170,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 100%, rgba(124,58,237,0.08) 0%, transparent 50%);
         }
 
+        /* Header */
         .header {
-            background: linear-gradient(135deg, var(--primary) 0%, #0d9488 100%);
-            color: white;
-            padding: 1.5rem 2rem;
-            text-align: center;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 1.25rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .header h1 { font-size: 1.75rem; font-weight: 700; }
-        .header p { opacity: 0.9; font-size: 1rem; margin-top: 0.25rem; }
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 0.5rem;
+        }
 
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.25rem;
+            background: linear-gradient(135deg, #fff 0%, #a1a1aa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-tagline {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+        }
+
+        /* Tabs */
         .tabs {
             display: flex;
             justify-content: center;
             gap: 0.5rem;
-            padding: 1rem;
-            background: white;
-            border-bottom: 1px solid var(--gray-200);
+            padding: 1.5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .tab {
             padding: 0.75rem 1.5rem;
-            border: none;
-            background: var(--gray-100);
-            border-radius: 8px;
-            cursor: pointer;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-secondary);
             font-weight: 600;
             font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
             font-family: inherit;
-            transition: all 0.2s;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .tab:hover { background: var(--gray-200); }
-        .tab.active { background: var(--primary); color: white; }
-        .tab.train-tab.active { background: var(--train-color); }
+        .tab:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-1);
+            color: var(--text-primary);
+        }
 
+        .tab.active {
+            background: var(--gradient-1);
+            border-color: transparent;
+            color: #000;
+        }
+
+        .tab.train-tab.active {
+            background: var(--gradient-2);
+            color: #fff;
+        }
+
+        /* Container */
         .container {
-            max-width: 1000px;
+            max-width: 700px;
             margin: 0 auto;
-            padding: 1.5rem;
+            padding: 0 1.5rem 2rem;
         }
 
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
-
+        /* Cards */
         .card {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
             padding: 1.5rem;
             margin-bottom: 1rem;
+            transition: all 0.3s ease;
         }
 
-        .section-header {
+        .card:hover {
+            border-color: rgba(0,212,170,0.3);
+            box-shadow: 0 0 30px rgba(0,212,170,0.05);
+        }
+
+        .card-header {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid var(--gray-100);
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
         }
 
-        .section-header h3 {
-            font-size: 1rem;
+        .card-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--gradient-glow);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .card-title {
+            font-family: 'Space Grotesk', sans-serif;
             font-weight: 600;
-            color: var(--gray-700);
+            font-size: 1rem;
+            color: var(--text-primary);
         }
 
-        .section-header .emoji { font-size: 1.25rem; }
-
+        /* Forms */
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 0.75rem;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
         }
 
         .form-group label {
-            display: block;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 600;
-            color: var(--gray-500);
-            margin-bottom: 0.25rem;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
         input, select {
             width: 100%;
-            padding: 0.625rem 0.75rem;
-            border: 2px solid var(--gray-200);
-            border-radius: 8px;
-            font-size: 0.9rem;
+            padding: 0.875rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
             font-family: inherit;
             transition: all 0.2s;
-            background: white;
         }
 
         input:focus, select:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 3px rgba(0,212,170,0.15);
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2371717a' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 2.5rem;
         }
 
         .airport-input {
-            font-size: 1.25rem;
+            font-family: 'Space Grotesk', monospace;
+            font-size: 1.5rem;
             font-weight: 700;
-            text-transform: uppercase;
             text-align: center;
-            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            background: var(--bg-primary);
         }
 
+        /* Route Row */
         .route-row {
             display: grid;
             grid-template-columns: 1fr auto 1fr;
-            gap: 0.5rem;
+            gap: 1rem;
             align-items: end;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
 
-        .arrow { 
-            font-size: 1.5rem; 
-            color: var(--gray-400);
-            padding-bottom: 0.5rem;
+        .route-arrow {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: #000;
+            margin-bottom: 0.25rem;
         }
 
+        /* Toggle Sections */
         .toggle-section {
-            background: var(--gray-50);
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
         }
 
         .toggle-header {
@@ -177,23 +283,21 @@
         .toggle-header h4 {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
             font-size: 0.9rem;
             font-weight: 600;
-            color: var(--gray-700);
+            color: var(--text-secondary);
         }
 
         .toggle-switch {
-            position: relative;
             width: 48px;
             height: 26px;
-            background: var(--gray-300);
+            background: var(--bg-card);
             border-radius: 13px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.3s;
+            position: relative;
         }
-
-        .toggle-switch.active { background: var(--primary); }
 
         .toggle-switch::after {
             content: '';
@@ -202,117 +306,257 @@
             left: 3px;
             width: 20px;
             height: 20px;
-            background: white;
+            background: var(--text-muted);
             border-radius: 50%;
-            transition: transform 0.2s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.3s;
         }
 
-        .toggle-switch.active::after { transform: translateX(22px); }
+        .toggle-switch.active {
+            background: var(--accent-1);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(22px);
+            background: #000;
+        }
 
         .toggle-content {
             display: none;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--gray-200);
+            margin-top: 1.25rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--border);
         }
 
         .toggle-content.show { display: block; }
 
+        /* Buttons */
         .btn {
-            display: inline-flex;
+            width: 100%;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Space Grotesk', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            padding: 0.875rem 1.5rem;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-            width: 100%;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, #0d9488 100%);
-            color: white;
+            background: var(--gradient-1);
+            color: #000;
         }
 
-        .btn-train {
-            background: linear-gradient(135deg, var(--train-color) 0%, #6d28d9 100%);
-            color: white;
-        }
-
-        .btn-primary:hover, .btn-train:hover {
+        .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
+            box-shadow: 0 10px 40px rgba(0,212,170,0.3);
         }
 
+        .btn-secondary {
+            background: var(--gradient-2);
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(124,58,237,0.3);
+        }
+
+        /* Quick Routes */
         .quick-routes {
             display: flex;
             flex-wrap: wrap;
+            justify-content: center;
             gap: 0.5rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
         }
 
         .quick-route {
-            padding: 0.5rem 0.75rem;
-            background: white;
-            border: 2px solid var(--gray-200);
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
             border-radius: 20px;
-            cursor: pointer;
+            color: var(--text-secondary);
             font-size: 0.8rem;
             font-weight: 500;
+            cursor: pointer;
             transition: all 0.2s;
             font-family: inherit;
         }
 
         .quick-route:hover {
-            border-color: var(--primary);
-            background: var(--primary-light);
+            border-color: var(--accent-1);
+            color: var(--accent-1);
+            background: rgba(0,212,170,0.1);
         }
 
-        .quick-route.train:hover {
-            border-color: var(--train-color);
-            background: var(--train-light);
+        /* Tab Content */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Train styles */
-        .train-card {
-            border: 2px solid var(--train-light);
+        /* Results */
+        .results-container { display: none; }
+        .results-container.show { display: block; animation: fadeIn 0.4s ease; }
+
+        .result-hero {
+            background: var(--gradient-glow);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0,212,170,0.1) 0%, transparent 50%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .result-hero .big-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            position: relative;
+        }
+
+        .result-hero .unit {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .result-hero .label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .stat-card .icon {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-card .label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.25rem;
+        }
+
+        /* Breakdown */
+        .breakdown {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
             border-radius: 16px;
             overflow: hidden;
-            background: white;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+            background: var(--bg-secondary);
+            font-weight: 600;
+        }
+
+        .breakdown-item span:first-child {
+            color: var(--text-secondary);
+        }
+
+        .breakdown-item span:last-child {
+            color: var(--text-primary);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Train Card */
+        .train-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
             margin-bottom: 1rem;
         }
 
         .train-header {
-            background: linear-gradient(135deg, var(--train-color) 0%, #6d28d9 100%);
-            color: white;
-            padding: 1rem 1.5rem;
+            background: var(--gradient-2);
+            padding: 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .train-route {
-            font-size: 1.25rem;
+        .train-route-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
             font-weight: 700;
         }
 
         .train-operator {
             background: rgba(255,255,255,0.2);
-            padding: 0.25rem 0.75rem;
-            border-radius: 15px;
+            padding: 0.375rem 0.75rem;
+            border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 600;
         }
 
-        .train-details {
-            padding: 1.5rem;
-        }
+        .train-details { padding: 1.5rem; }
 
         .train-stats {
             display: grid;
@@ -323,71 +567,80 @@
 
         .train-stat {
             text-align: center;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
         }
 
         .train-stat .value {
-            font-size: 1.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
             font-weight: 700;
-            color: var(--train-color);
+            color: var(--accent-2);
         }
 
         .train-stat .label {
             font-size: 0.7rem;
-            color: var(--gray-500);
+            color: var(--text-muted);
             text-transform: uppercase;
+            margin-top: 0.25rem;
         }
 
-        .stations-timeline {
-            background: var(--gray-50);
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
+        /* Stations Timeline */
+        .stations-box {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 1.25rem;
             margin-bottom: 1rem;
         }
 
-        .stations-timeline h4 {
-            font-size: 0.8rem;
-            color: var(--gray-500);
+        .stations-title {
+            font-size: 0.75rem;
+            color: var(--text-muted);
             text-transform: uppercase;
-            margin-bottom: 0.75rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
         }
 
         .station-list {
             display: flex;
-            align-items: center;
             flex-wrap: wrap;
             gap: 0.5rem;
+            align-items: center;
         }
 
         .station {
-            background: white;
-            padding: 0.375rem 0.75rem;
-            border-radius: 15px;
+            padding: 0.5rem 0.875rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 500;
-            border: 1px solid var(--gray-200);
         }
 
         .station.endpoint {
-            background: var(--train-color);
-            color: white;
+            background: var(--gradient-2);
             border: none;
+            color: #fff;
         }
 
         .station-arrow {
-            color: var(--gray-400);
-            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-size: 0.75rem;
         }
 
+        /* Comparison Box */
         .comparison-box {
-            background: linear-gradient(135deg, var(--primary-light) 0%, #cffafe 100%);
-            border-radius: 12px;
-            padding: 1.25rem;
+            background: linear-gradient(135deg, rgba(0,212,170,0.1) 0%, rgba(124,58,237,0.1) 100%);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
             margin-top: 1rem;
         }
 
         .comparison-title {
             font-weight: 600;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -397,21 +650,34 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
+            margin-bottom: 1rem;
         }
 
         .comparison-item {
-            background: white;
-            padding: 1rem;
-            border-radius: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.25rem;
             text-align: center;
         }
 
-        .comparison-item .mode { font-size: 2rem; margin-bottom: 0.25rem; }
-        .comparison-item .emissions { font-size: 1.25rem; font-weight: 700; }
-        .comparison-item .label { font-size: 0.75rem; color: var(--gray-500); }
+        .comparison-item .mode { font-size: 2.5rem; }
+        
+        .comparison-item .emissions {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+
+        .comparison-item .label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
 
         .comparison-item.winner {
-            border: 2px solid var(--primary);
+            border-color: var(--accent-1);
             position: relative;
         }
 
@@ -420,198 +686,72 @@
             position: absolute;
             top: -10px;
             right: 10px;
-            background: var(--primary);
-            color: white;
-            padding: 0.125rem 0.5rem;
+            background: var(--accent-1);
+            color: #000;
+            padding: 0.25rem 0.75rem;
             border-radius: 10px;
             font-size: 0.7rem;
             font-weight: 600;
         }
 
         .savings-banner {
-            background: var(--primary);
-            color: white;
-            padding: 1rem;
-            border-radius: 10px;
+            background: var(--gradient-1);
+            color: #000;
+            padding: 1.25rem;
+            border-radius: 12px;
             text-align: center;
-            margin-top: 1rem;
         }
 
         .savings-banner .big {
+            font-family: 'Space Grotesk', sans-serif;
             font-size: 1.5rem;
             font-weight: 700;
         }
 
-        .departures-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 0.5rem;
-            margin-top: 0.75rem;
-        }
-
-        .departure-time {
-            background: white;
-            padding: 0.5rem;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: 600;
-            font-size: 0.9rem;
-            border: 1px solid var(--gray-200);
-        }
-
-        /* Results */
-        .results-container { display: none; }
-        .results-container.show { display: block; animation: fadeIn 0.3s ease; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .result-hero {
-            text-align: center;
-            padding: 2rem;
-            background: linear-gradient(135deg, var(--primary-light) 0%, #cffafe 100%);
-            border-radius: 16px;
-            margin-bottom: 1rem;
-        }
-
-        .result-hero .big-number {
-            font-size: 3.5rem;
-            font-weight: 700;
-            color: var(--primary-dark);
-            line-height: 1;
-        }
-
-        .result-hero .unit { font-size: 1.25rem; color: var(--gray-500); }
-        .result-hero .label { font-size: 0.9rem; color: var(--gray-600); margin-top: 0.5rem; }
-
-        .equivalents {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-
-        .equivalent-card {
-            background: white;
-            padding: 1rem;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .equivalent-card .emoji { font-size: 1.5rem; margin-bottom: 0.25rem; }
-        .equivalent-card .value { font-size: 1.25rem; font-weight: 700; color: var(--gray-900); }
-        .equivalent-card .label { font-size: 0.65rem; color: var(--gray-500); text-transform: uppercase; }
-
-        .breakdown {
-            background: white;
-            border-radius: 12px;
-            padding: 1rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .breakdown-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--gray-100);
-            font-size: 0.9rem;
-        }
-
-        .breakdown-item:last-child { border-bottom: none; font-weight: 600; }
-
-        .alternative-card {
-            border: 2px solid var(--primary-light);
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 0.75rem;
-            background: white;
-        }
-
-        .alternative-card.best {
-            border-color: var(--primary);
-            background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 100%);
-        }
-
-        .alternative-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .alternative-title { font-weight: 600; font-size: 0.95rem; }
-
-        .savings-badge {
-            background: var(--primary);
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 15px;
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-
-        .alternative-reason {
-            font-size: 0.85rem;
-            color: var(--gray-600);
-            padding: 0.75rem;
-            background: var(--gray-50);
-            border-radius: 8px;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 3rem;
-        }
-
-        .loading.show { display: block; }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--gray-200);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        .spinner.train { border-top-color: var(--train-color); }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .no-route {
-            text-align: center;
-            padding: 2rem;
-            color: var(--gray-500);
-        }
-
-        .no-route .icon { font-size: 3rem; margin-bottom: 1rem; }
-
-        /* Booking section */
+        /* Booking Section */
         .booking-section {
+            background: linear-gradient(135deg, rgba(124,58,237,0.1) 0%, rgba(59,130,246,0.1) 100%);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
             margin-top: 1.5rem;
-            padding: 1.25rem;
-            background: linear-gradient(135deg, #fef3c7 0%, #fce7f3 100%);
-            border-radius: 12px;
         }
 
         .booking-title {
+            font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 1.1rem;
             margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        }
+
+        .booking-route-box {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .booking-route-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .booking-route-stations {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .booking-route-stations .station-name {
+            color: var(--accent-2);
         }
 
         .booking-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 0.75rem;
         }
 
@@ -619,96 +759,113 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            padding: 0.875rem 1rem;
-            background: white;
-            border-radius: 10px;
+            padding: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
             text-decoration: none;
-            color: var(--gray-900);
-            border: 2px solid var(--gray-200);
+            color: var(--text-primary);
             transition: all 0.2s;
         }
 
         .booking-link:hover {
-            border-color: var(--train-color);
+            border-color: var(--accent-2);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+            box-shadow: 0 8px 20px rgba(124,58,237,0.2);
         }
 
         .booking-link .logo {
             font-size: 1.5rem;
             width: 40px;
             height: 40px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--gray-100);
-            border-radius: 8px;
         }
 
-        .booking-link .info {
-            flex: 1;
-        }
-
-        .booking-link .name {
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .booking-link .desc {
-            font-size: 0.7rem;
-            color: var(--gray-500);
-            margin-top: 0.125rem;
-        }
-
-        .booking-link .arrow {
-            color: var(--gray-400);
-            font-size: 1.25rem;
-        }
+        .booking-link .info { flex: 1; }
+        .booking-link .name { font-weight: 600; font-size: 0.9rem; }
+        .booking-link .desc { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.125rem; }
+        .booking-link .arrow { color: var(--text-muted); }
 
         .booking-link.recommended {
-            border-color: var(--train-color);
-            background: linear-gradient(135deg, #f5f3ff 0%, #fdf4ff 100%);
+            border-color: var(--accent-2);
+            background: rgba(124,58,237,0.1);
         }
 
-        .booking-link.recommended::before {
-            content: '⭐ Recommended';
-            position: absolute;
-            top: -8px;
-            left: 10px;
-            background: var(--train-color);
-            color: white;
-            font-size: 0.65rem;
-            padding: 0.125rem 0.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-
-        .booking-link.recommended {
-            position: relative;
-        }
-
-        .footer-note {
+        /* Loading */
+        .loading {
+            display: none;
             text-align: center;
-            padding: 1rem;
-            color: var(--gray-500);
-            font-size: 0.75rem;
+            padding: 4rem 2rem;
         }
 
-        .footer-note a { color: var(--primary); text-decoration: none; }
+        .loading.show { display: block; }
 
-        @media (max-width: 600px) {
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent-1);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loading p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* No Route */
+        .no-route {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .no-route .icon { font-size: 4rem; margin-bottom: 1rem; }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: var(--accent-1);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
             .form-grid { grid-template-columns: 1fr 1fr; }
-            .equivalents { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
             .train-stats { grid-template-columns: repeat(2, 1fr); }
+            .result-hero .big-number { font-size: 3rem; }
             .tabs { flex-wrap: wrap; }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>🌱 Carbon Travel Calculator</h1>
-        <p>Calculate your complete trip carbon footprint</p>
-    </div>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🌍</div>
+                <span class="logo-text">Carbon Travel Intelligence</span>
+            </div>
+            <div class="header-tagline">Calculate • Compare • Reduce</div>
+        </div>
+    </header>
 
     <!-- Tabs -->
     <div class="tabs">
@@ -722,17 +879,17 @@
             <div id="calculatorForm">
                 <!-- Quick Routes -->
                 <div class="quick-routes">
-                    <button class="quick-route" onclick="setRoute('DUB', 'SIN')">🇮🇪→🇸🇬 Dublin-Singapore</button>
-                    <button class="quick-route" onclick="setRoute('LHR', 'CDG')">🇬🇧→🇫🇷 London-Paris</button>
-                    <button class="quick-route" onclick="setRoute('LHR', 'JFK')">🇬🇧→🇺🇸 London-NYC</button>
-                    <button class="quick-route" onclick="setRoute('FRA', 'SIN')">🇩🇪→🇸🇬 Frankfurt-Singapore</button>
+                    <button class="quick-route" onclick="setRoute('DUB', 'SIN')">🇮🇪 Dublin → Singapore</button>
+                    <button class="quick-route" onclick="setRoute('LHR', 'CDG')">🇬🇧 London → Paris</button>
+                    <button class="quick-route" onclick="setRoute('LHR', 'JFK')">🇬🇧 London → NYC</button>
+                    <button class="quick-route" onclick="setRoute('FRA', 'SIN')">🇩🇪 Frankfurt → Singapore</button>
                 </div>
 
-                <!-- Flight Section -->
+                <!-- Flight Card -->
                 <div class="card">
-                    <div class="section-header">
-                        <span class="emoji">✈️</span>
-                        <h3>Flight Details</h3>
+                    <div class="card-header">
+                        <div class="card-icon">✈️</div>
+                        <span class="card-title">Flight Details</span>
                     </div>
 
                     <div class="route-row">
@@ -740,7 +897,7 @@
                             <label>From</label>
                             <input type="text" id="origin" class="airport-input" placeholder="LHR" maxlength="3">
                         </div>
-                        <div class="arrow">→</div>
+                        <div class="route-arrow">→</div>
                         <div class="form-group">
                             <label>To</label>
                             <input type="text" id="destination" class="airport-input" placeholder="CDG" maxlength="3">
@@ -776,10 +933,10 @@
                     </div>
                 </div>
 
-                <!-- Hotel Section -->
+                <!-- Hotel Toggle -->
                 <div class="toggle-section">
                     <div class="toggle-header" onclick="toggleSection('hotel')">
-                        <h4><span>🏨</span> Hotel Stay</h4>
+                        <h4><span>🏨</span> Add Hotel Stay</h4>
                         <div class="toggle-switch" id="hotelToggle"></div>
                     </div>
                     <div class="toggle-content" id="hotelContent">
@@ -791,17 +948,12 @@
                             <div class="form-group">
                                 <label>Country</label>
                                 <select id="hotelCountry">
-                                    <option value="FR">France 🇫🇷</option>
-                                    <option value="GB">UK 🇬🇧</option>
-                                    <option value="DE">Germany 🇩🇪</option>
-                                    <option value="US">USA 🇺🇸</option>
-                                    <option value="SG">Singapore 🇸🇬</option>
-                                    <option value="AE">UAE 🇦🇪</option>
-                                    <option value="JP">Japan 🇯🇵</option>
-                                    <option value="IT">Italy 🇮🇹</option>
-                                    <option value="ES">Spain 🇪🇸</option>
-                                    <option value="IE">Ireland 🇮🇪</option>
-                                    <option value="NL">Netherlands 🇳🇱</option>
+                                    <option value="FR">France</option>
+                                    <option value="GB">UK</option>
+                                    <option value="DE">Germany</option>
+                                    <option value="US">USA</option>
+                                    <option value="SG">Singapore</option>
+                                    <option value="NL">Netherlands</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -810,9 +962,16 @@
                                     <option value="1">1</option>
                                     <option value="2" selected>2</option>
                                     <option value="3">3</option>
-                                    <option value="4">4</option>
                                     <option value="5">5</option>
                                     <option value="7">7</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Star Rating</label>
+                                <select id="hotelStars">
+                                    <option value="3">⭐⭐⭐</option>
+                                    <option value="4" selected>⭐⭐⭐⭐</option>
+                                    <option value="5">⭐⭐⭐⭐⭐</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -820,21 +979,12 @@
                                 <select id="hotelRooms">
                                     <option value="1" selected>1</option>
                                     <option value="2">2</option>
-                                    <option value="3">3</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Star Rating</label>
-                                <select id="hotelStars">
-                                    <option value="3">⭐⭐⭐ 3 Star</option>
-                                    <option value="4" selected>⭐⭐⭐⭐ 4 Star</option>
-                                    <option value="5">⭐⭐⭐⭐⭐ 5 Star</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Breakfast</label>
                                 <select id="hotelBreakfast">
-                                    <option value="none">Not included</option>
+                                    <option value="none">None</option>
                                     <option value="continental">Continental</option>
                                     <option value="buffet" selected>Buffet</option>
                                     <option value="vegan">Vegan</option>
@@ -844,55 +994,52 @@
                     </div>
                 </div>
 
-                <!-- Airport Transfer -->
+                <!-- Transport Toggle -->
                 <div class="toggle-section">
                     <div class="toggle-header" onclick="toggleSection('transfer')">
-                        <h4><span>🚕</span> Airport Transfer</h4>
+                        <h4><span>🚕</span> Add Airport Transfer</h4>
                         <div class="toggle-switch" id="transferToggle"></div>
                     </div>
                     <div class="toggle-content" id="transferContent">
                         <div class="form-grid">
                             <div class="form-group">
-                                <label>Transfer Type</label>
+                                <label>Vehicle</label>
                                 <select id="transferType">
-                                    <option value="taxi">Regular Taxi</option>
-                                    <option value="uber_x" selected>Uber / Bolt</option>
-                                    <option value="uber_black">Premium Sedan</option>
-                                    <option value="electric_uber">Electric (Tesla)</option>
-                                    <option value="metro">Metro / Train</option>
+                                    <option value="taxi">Taxi</option>
+                                    <option value="uber_x" selected>Uber</option>
+                                    <option value="electric_uber">Electric</option>
+                                    <option value="metro">Metro</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Direction</label>
                                 <select id="transferDirection">
-                                    <option value="both" selected>Both ways</option>
-                                    <option value="arrival">Arrival only</option>
-                                    <option value="departure">Departure only</option>
+                                    <option value="both" selected>Round Trip</option>
+                                    <option value="arrival">One Way</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- City Transport -->
+                <!-- City Transport Toggle -->
                 <div class="toggle-section">
                     <div class="toggle-header" onclick="toggleSection('cityTransport')">
-                        <h4><span>🚗</span> City Transport (Uber/Taxi)</h4>
+                        <h4><span>🚗</span> Add City Transport</h4>
                         <div class="toggle-switch" id="cityTransportToggle"></div>
                     </div>
                     <div class="toggle-content" id="cityTransportContent">
                         <div class="form-grid">
                             <div class="form-group">
-                                <label>Vehicle Type</label>
+                                <label>Type</label>
                                 <select id="cityVehicleType">
-                                    <option value="uber_x" selected>Uber / Bolt</option>
-                                    <option value="taxi">Local Taxi</option>
-                                    <option value="electric_uber">Electric Uber</option>
+                                    <option value="uber_x" selected>Uber</option>
+                                    <option value="taxi">Taxi</option>
                                     <option value="metro">Metro</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>Estimated KM</label>
+                                <label>Est. KM</label>
                                 <select id="cityKm">
                                     <option value="10">~10 km</option>
                                     <option value="25">~25 km</option>
@@ -920,28 +1067,28 @@
                 <div class="result-hero">
                     <div class="big-number" id="totalEmissions">0</div>
                     <div class="unit">kg CO₂e</div>
-                    <div class="label" id="tripLabel">Complete trip emissions</div>
+                    <div class="label" id="tripLabel">Total Trip Emissions</div>
                 </div>
 
-                <div class="equivalents">
-                    <div class="equivalent-card">
-                        <div class="emoji">🌳</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="icon">🌳</div>
                         <div class="value" id="treesNeeded">0</div>
-                        <div class="label">Trees to offset</div>
+                        <div class="label">Trees to Offset</div>
                     </div>
-                    <div class="equivalent-card">
-                        <div class="emoji">🚗</div>
+                    <div class="stat-card">
+                        <div class="icon">🚗</div>
                         <div class="value" id="drivingKm">0</div>
-                        <div class="label">KM driving</div>
+                        <div class="label">KM Driving Equiv.</div>
                     </div>
-                    <div class="equivalent-card">
-                        <div class="emoji">📺</div>
+                    <div class="stat-card">
+                        <div class="icon">📺</div>
                         <div class="value" id="streamingHours">0</div>
                         <div class="label">Hours Netflix</div>
                     </div>
                 </div>
 
-                <div class="breakdown" id="breakdown">
+                <div class="breakdown">
                     <div class="breakdown-item" id="flightRow">
                         <span>✈️ Flights</span>
                         <span id="flightValue">0 kg</span>
@@ -955,20 +1102,12 @@
                         <span id="transportValue">0 kg</span>
                     </div>
                     <div class="breakdown-item">
-                        <span><strong>Total</strong></span>
-                        <span id="totalValue"><strong>0 kg</strong></span>
+                        <span>Total Emissions</span>
+                        <span id="totalValue">0 kg</span>
                     </div>
                 </div>
 
-                <div class="card" id="alternativesSection" style="margin-top: 1rem;">
-                    <div class="section-header">
-                        <span class="emoji">💡</span>
-                        <h3>Greener Alternatives</h3>
-                    </div>
-                    <div id="alternativesList"></div>
-                </div>
-
-                <button class="btn btn-primary" onclick="resetForm()" style="margin-top: 1rem;">
+                <button class="btn btn-secondary" onclick="resetForm()" style="margin-top: 1.5rem;">
                     ← Calculate Another Trip
                 </button>
             </div>
@@ -977,62 +1116,60 @@
         <!-- TRAIN TAB -->
         <div id="trainTab" class="tab-content">
             <div id="trainForm">
-                <!-- Quick Train Routes -->
                 <div class="quick-routes">
-                    <button class="quick-route train" onclick="setTrainRoute('LHR', 'CDG')">🇬🇧→🇫🇷 London-Paris</button>
-                    <button class="quick-route train" onclick="setTrainRoute('LHR', 'AMS')">🇬🇧→🇳🇱 London-Amsterdam</button>
-                    <button class="quick-route train" onclick="setTrainRoute('CDG', 'AMS')">🇫🇷→🇳🇱 Paris-Amsterdam</button>
-                    <button class="quick-route train" onclick="setTrainRoute('FRA', 'MUC')">🇩🇪 Frankfurt-Munich</button>
-                    <button class="quick-route train" onclick="setTrainRoute('MAD', 'BCN')">🇪🇸 Madrid-Barcelona</button>
-                    <button class="quick-route train" onclick="setTrainRoute('FCO', 'MXP')">🇮🇹 Rome-Milan</button>
+                    <button class="quick-route" onclick="setTrainRoute('LHR', 'CDG')">🇬🇧 London → Paris</button>
+                    <button class="quick-route" onclick="setTrainRoute('LHR', 'AMS')">🇬🇧 London → Amsterdam</button>
+                    <button class="quick-route" onclick="setTrainRoute('CDG', 'AMS')">🇫🇷 Paris → Amsterdam</button>
+                    <button class="quick-route" onclick="setTrainRoute('FRA', 'MUC')">🇩🇪 Frankfurt → Munich</button>
+                    <button class="quick-route" onclick="setTrainRoute('MAD', 'BCN')">🇪🇸 Madrid → Barcelona</button>
                 </div>
 
                 <div class="card">
-                    <div class="section-header">
-                        <span class="emoji">🚂</span>
-                        <h3>European Train Route Finder</h3>
+                    <div class="card-header">
+                        <div class="card-icon">🚂</div>
+                        <span class="card-title">European Train Route</span>
                     </div>
 
                     <div class="route-row">
                         <div class="form-group">
-                            <label>From (Airport Code)</label>
+                            <label>From</label>
                             <input type="text" id="trainOrigin" class="airport-input" placeholder="LHR" maxlength="3">
                         </div>
-                        <div class="arrow">→</div>
+                        <div class="route-arrow" style="background: var(--gradient-2);">→</div>
                         <div class="form-group">
-                            <label>To (Airport Code)</label>
+                            <label>To</label>
                             <input type="text" id="trainDestination" class="airport-input" placeholder="CDG" maxlength="3">
                         </div>
                     </div>
 
-                    <button class="btn btn-train" onclick="searchTrain()">
-                        🚂 Find Train Route & Compare with Flight
+                    <button class="btn btn-secondary" onclick="searchTrain()">
+                        🚂 Find Train Route & Compare
                     </button>
                 </div>
             </div>
 
             <!-- Train Loading -->
             <div class="loading" id="trainLoading">
-                <div class="spinner train"></div>
-                <p>Searching European train schedules...</p>
+                <div class="spinner" style="border-top-color: var(--accent-2);"></div>
+                <p>Searching European train routes...</p>
             </div>
 
             <!-- Train Results -->
             <div class="results-container" id="trainResults">
                 <div id="trainResultContent"></div>
-                <button class="btn btn-train" onclick="resetTrainForm()" style="margin-top: 1rem;">
+                <button class="btn btn-secondary" onclick="resetTrainForm()" style="margin-top: 1.5rem;">
                     ← Search Another Route
                 </button>
             </div>
         </div>
-
-        <div class="footer-note">
-            Train data from <a href="https://www.eurostar.com" target="_blank">Eurostar</a>, 
-            <a href="https://www.tgv.com" target="_blank">TGV</a>, 
-            <a href="https://www.bahn.de" target="_blank">Deutsche Bahn</a> • 
-            Emissions aligned with <a href="https://uic.org" target="_blank">UIC Railway Handbook</a>
-        </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        Data aligned with <a href="https://www.icao.int" target="_blank">ICAO</a>, 
+        <a href="https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2024" target="_blank">DEFRA 2024</a> & 
+        <a href="https://uic.org" target="_blank">UIC</a>
+    </footer>
 
     <script>
         // Tab switching
@@ -1117,17 +1254,10 @@
                     <div class="no-route">
                         <div class="icon">🚂❌</div>
                         <h3>No Direct Train Route Found</h3>
-                        <p>${origin} → ${destination}</p>
-                        <p style="margin-top: 1rem; font-size: 0.9rem;">
-                            ${data.message || 'This route may require connecting trains or is not served by high-speed rail.'}
+                        <p style="margin-top: 1rem;">${origin} → ${destination}</p>
+                        <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">
+                            ${data.message || 'Try connecting trains or flight alternatives.'}
                         </p>
-                        <div class="card" style="margin-top: 1.5rem; text-align: left;">
-                            <h4>✈️ Flight Option</h4>
-                            <p style="margin-top: 0.5rem;">
-                                Emissions: <strong>${data.flight?.emissions_kg || 'N/A'} kg CO₂e</strong><br>
-                                Distance: ${data.flight?.distance_km || 'N/A'} km
-                            </p>
-                        </div>
                     </div>
                 `;
                 return;
@@ -1138,47 +1268,35 @@
             const savings = comp.emissions.savings_percent;
             const booking = data.booking || { platforms: [] };
 
-            // Generate booking links HTML
+            const originStation = booking.platforms[0]?.origin_station || train.origin_station;
+            const destStation = booking.platforms[0]?.destination_station || train.destination_station;
+
             let bookingHtml = '';
             if (booking.platforms && booking.platforms.length > 0) {
-                const firstPlatform = booking.platforms[0];
-                const originStation = firstPlatform.origin_station || train.origin_station;
-                const destStation = firstPlatform.destination_station || train.destination_station;
-                
                 bookingHtml = `
                     <div class="booking-section">
                         <div class="booking-title">🎫 Book Your Train Tickets</div>
                         
-                        <div style="background: white; padding: 1rem; border-radius: 10px; margin-bottom: 1rem; text-align: center;">
-                            <div style="font-size: 0.75rem; color: var(--gray-500); text-transform: uppercase; margin-bottom: 0.5rem;">Your Route</div>
-                            <div style="font-size: 1.1rem; font-weight: 600;">
-                                <span style="color: var(--train-color);">📍 ${originStation}</span>
-                                <span style="color: var(--gray-400); margin: 0 0.5rem;">→</span>
-                                <span style="color: var(--train-color);">📍 ${destStation}</span>
-                            </div>
-                            <div style="font-size: 0.8rem; color: var(--gray-500); margin-top: 0.25rem;">
-                                Search for "${data.route.origin_city} to ${data.route.destination_city}" on each platform
+                        <div class="booking-route-box">
+                            <div class="booking-route-label">Your Route</div>
+                            <div class="booking-route-stations">
+                                <span class="station-name">📍 ${originStation}</span>
+                                <span style="color: var(--text-muted); margin: 0 0.5rem;">→</span>
+                                <span class="station-name">📍 ${destStation}</span>
                             </div>
                         </div>
                         
                         <div class="booking-grid">
-                            ${booking.platforms.slice(0, 6).map((p, i) => `
+                            ${booking.platforms.slice(0, 5).map((p, i) => `
                                 <a href="${p.url}" target="_blank" rel="noopener" class="booking-link ${i === 0 ? 'recommended' : ''}">
                                     <div class="logo">${p.logo}</div>
                                     <div class="info">
                                         <div class="name">${p.platform}</div>
-                                        <div class="desc">${p.description.substring(0, 40)}...</div>
+                                        <div class="desc">${p.description.substring(0, 35)}...</div>
                                     </div>
                                     <div class="arrow">↗</div>
                                 </a>
                             `).join('')}
-                        </div>
-                        
-                        <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(124, 58, 237, 0.1); border-radius: 8px; font-size: 0.8rem; text-align: center;">
-                            💡 <strong>Tip:</strong> Copy these station names when booking:<br>
-                            <code style="background: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600;">${originStation}</code>
-                            →
-                            <code style="background: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 600;">${destStation}</code>
                         </div>
                     </div>
                 `;
@@ -1187,7 +1305,7 @@
             container.innerHTML = `
                 <div class="train-card">
                     <div class="train-header">
-                        <div class="train-route">${data.route.origin_city} → ${data.route.destination_city}</div>
+                        <div class="train-route-title">${data.route.origin_city} → ${data.route.destination_city}</div>
                         <div class="train-operator">${train.operator}</div>
                     </div>
                     <div class="train-details">
@@ -1210,8 +1328,8 @@
                             </div>
                         </div>
 
-                        <div class="stations-timeline">
-                            <h4>🚉 Route Stations (${train.stations.count} stops)</h4>
+                        <div class="stations-box">
+                            <div class="stations-title">🚉 Route Stations</div>
                             <div class="station-list">
                                 ${train.stations.list.map((s, i) => `
                                     ${i > 0 ? '<span class="station-arrow">→</span>' : ''}
@@ -1220,17 +1338,17 @@
                             </div>
                         </div>
 
-                        <div class="stations-timeline">
-                            <h4>🕐 Sample Departure Times (${train.schedule.frequency})</h4>
-                            <div class="departures-grid">
+                        <div class="stations-box">
+                            <div class="stations-title">🕐 Departures (${train.schedule.frequency})</div>
+                            <div class="station-list">
                                 ${train.schedule.sample_departures.map(t => `
-                                    <div class="departure-time">${t}</div>
+                                    <span class="station">${t}</span>
                                 `).join('')}
                             </div>
                         </div>
 
                         <div class="comparison-box">
-                            <div class="comparison-title">⚖️ Train vs Flight Comparison</div>
+                            <div class="comparison-title">⚖️ Train vs Flight</div>
                             <div class="comparison-grid">
                                 <div class="comparison-item winner">
                                     <div class="mode">🚂</div>
@@ -1245,19 +1363,11 @@
                             </div>
                             <div class="savings-banner">
                                 <div class="big">🌱 Save ${savings}% CO₂</div>
-                                <div>Taking the train saves ${comp.emissions.savings_kg} kg CO₂e per passenger</div>
+                                <div>Train saves ${comp.emissions.savings_kg} kg per passenger</div>
                             </div>
                         </div>
 
                         ${bookingHtml}
-
-                        <div style="margin-top: 1rem; padding: 1rem; background: var(--gray-50); border-radius: 10px; font-size: 0.85rem;">
-                            <strong>📍 Stations:</strong><br>
-                            Depart: <strong>${train.origin_station}</strong><br>
-                            Arrive: <strong>${train.destination_station}</strong><br><br>
-                            <strong>⏱️ Journey Time:</strong> ${train.duration} (${comp.duration.train_minutes} min)<br>
-                            <strong>✈️ Flight Time:</strong> ~${comp.duration.flight_minutes} min (+ airport time)
-                        </div>
                     </div>
                 </div>
             `;
@@ -1268,7 +1378,7 @@
             document.getElementById('trainForm').style.display = 'block';
         }
 
-        // FLIGHT CALCULATION (existing code)
+        // FLIGHT CALCULATION
         async function calculate() {
             const origin = document.getElementById('origin').value.toUpperCase().trim();
             const destination = document.getElementById('destination').value.toUpperCase().trim();
@@ -1384,29 +1494,7 @@
             document.getElementById('transportRow').style.display = total.breakdown.transport_kg > 0 ? 'flex' : 'none';
             document.getElementById('transportValue').textContent = `${Math.round(total.breakdown.transport_kg).toLocaleString()} kg`;
 
-            document.getElementById('totalValue').innerHTML = `<strong>${Math.round(total.co2e_kg).toLocaleString()} kg</strong>`;
-
-            displayAlternatives(data.lower_impact_alternatives || [], total.co2e_kg);
-        }
-
-        function displayAlternatives(alternatives, originalEmissions) {
-            const container = document.getElementById('alternativesList');
-            const valid = alternatives.filter(a => a.savings?.percentage > 5);
-
-            if (!valid.length) {
-                container.innerHTML = `<p style="text-align:center;color:var(--gray-500);padding:1rem;">No significantly greener alternatives for this route.</p>`;
-                return;
-            }
-
-            container.innerHTML = valid.map((alt, i) => `
-                <div class="alternative-card ${i === 0 ? 'best' : ''}">
-                    <div class="alternative-header">
-                        <span class="alternative-title">${alt.alternative_id.includes('train') ? '🚂 Take the Train' : '🌿 Eco Alternative'}</span>
-                        <span class="savings-badge">-${Math.round(alt.savings.percentage)}%</span>
-                    </div>
-                    <div class="alternative-reason">💡 ${alt.recommendation_reason}<br><strong>Saves ${Math.round(alt.savings.absolute_kg)} kg CO₂e</strong></div>
-                </div>
-            `).join('');
+            document.getElementById('totalValue').textContent = `${Math.round(total.co2e_kg).toLocaleString()} kg`;
         }
 
         function resetForm() {
